@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<title>Cachulo</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="shortcut icon" type="image/jpg" href="pig.ico" />
+
+		<!-- Bootstrap CSS -->
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+			integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+		<!-- Bootstrap Icons -->
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+		<!-- Main Styling CSS -->
+		<link rel="stylesheet" href="main-style.css">
+
+	</head>
+
+	<body>
+
+		<!-- Navbar -->
+		<nav class="m-4 mb-5 navbar navbar-expand-lg navbar-light bg-warning rounded">
+			<div class="container-fluid">
+				<span class="h1 px-3 pt-1" href="#">
+					Cachulo
+					<i class="fs-1 bi bi-bicycle ps-2" style="vertical-align: text-top !important;"></i>
+				</span>
+				<ul class="navbar-nav">
+					<li class="nav-item px-4">
+						<a class="nav-link  text-dark" href="#">Preciso de ajuda :(</a>
+					</li>
+					<li class="nav-item pl-4">
+						<a class="nav-link  text-dark border border-dark rounded px-3" href="#">Consultar tabela de
+							preços<i class="d-none bi bi-tools align-top"></i></a>
+					</li>
+				</ul>
+			</div>
+		</nav>
+
+		<div id="main-container" class="container">
+			<!-- Header -->
+			<div class="row">
+				<div class="col-12"><p class="h5 text-muted m-0">Ordem de Produção</p></div>
+				<div class="col-12 mb-3">
+					<p class="h1"><span class="align-bottom">Custo Total: </span><span id="soan-custo" class="badge bg-success fs-4 align-middle">0.00€</span> 
+						<a class="btn btn-light border" data-bs-toggle="modal"
+							data-bs-target="#settingsModal"	rel="noopener noreferrer">
+							<i class="bi bi-pencil pe-2"></i>&nbsp;Editar detalhes</a>
+						<a class="btn btn-light border" data-bs-toggle="modal"
+						data-bs-target="#faturaModal"	rel="noopener noreferrer">
+							<i class="bi bi-receipt-cutoff pe-2"></i>&nbsp;Ver em modo fatura</a>
+					</p>
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			<!-- Add nova janela -->
+			<div id="add-new" class="add-new row border rounded text-center p-3">
+				<i id="add-icon" class="fs-3 text-muted bi bi-plus-square bi-plus-square-fill"></i>
+				<p class="p-0 m-0 text-muted">Adicionar janela</p>
+			</div>
+		</div>
+
+		<div class="container text-center my-3 d-none">
+			<div class="row">
+				<div class="col-3"></div>
+				<div class="col-6">
+					<select id="pickRef" class="form-select mb-3" aria-label="Default select example">
+						<option selected>Escolher referência</option>
+					</select>
+				</div>
+				<div class="col-3"></div>
+			</div>
+
+
+			<button type="button" class="btn btn-danger mb-3 d-none" id="btn-teste">Teste</button>
+		</div>
+
+
+
+
+
+
+		<!-- Settings Modal -->
+		<div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="settingsModalLabel">Detalhes da ordem da produção</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-12 ">
+								<div class="input-group mb-3">
+									<span class="input-group-text" id="inputGroup-sizing-lg">Cliente</span>
+									<input type="text" class="form-control" aria-label="Sizing example input"
+										aria-describedby="inputGroup-sizing-lg">
+								</div>
+							</div>
+							<div class="col-12 ">
+								<div class="input-group mb-3">
+									<span class="input-group-text" id="inputGroup-sizing-lg">Morada</span>
+									<input type="text" class="form-control" aria-label="Sizing example input"
+										aria-describedby="inputGroup-sizing-lg">
+								</div>
+							</div>
+							<div class="col-12 ">
+								<div class="input-group input-group-sm mb-3">
+									<span class="input-group-text">Ordem de produção</span>
+									<input type="number" class="form-control" aria-label="">
+									<span class="input-group-text">/2021</span>
+								</div>
+							</div>
+							<div class="col-12 ">
+								<div class="input-group input-group-sm mb-3">
+									<span class="input-group-text">Data</span>
+									<input id="date-input" type="date" class="form-control" value="" />
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-light border" data-bs-dismiss="modal">Cancelar</button>
+						<button type="button" class="btn btn-warning">Guardar alterações</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Fatura (receipt) Modal -->
+		<div class="modal fade" id="faturaModal" tabindex="-1" aria-labelledby="faturaModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-xl">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="faturaModalLabel">Ordem de Produçao</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<div class="row">
+							
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-warning" data-bs-dismiss="modal">Fechar</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<!-- Bootstrap JS + Popper -->
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+			integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+			crossorigin="anonymous"></script>
+
+		<!-- Firebase imports -->
+		<script defer src="/__/firebase/9.1.3/firebase-app-compat.js"></script>
+		<script defer src="/__/firebase/9.1.3/firebase-firestore-compat.js"></script>
+		<script defer src="/__/firebase/9.1.3/firebase-storage-compat.js"></script>
+		<script defer src="/__/firebase/9.1.3/firebase-analytics-compat.js"></script>
+		<script defer src="/__/firebase/9.1.3/firebase-performance-compat.js"></script>
+		<script defer src="/__/firebase/init.js?useEmulator=true"></script>
+		<!-- Firebase Shenanigans -->
+		<script type="module" src="firebaseShenanigans.js"></script>
+		<!-- Main JS File -->
+		<script src="main.js"></script>
+
+		<script>
+			// document.getElementById('btn-teste').addEventListener('click', async () => {
+			// 	console.log('aaaa');
+			// 	const docRef = doc(db, "aluminios", "exemplo-de-serie/perfis/exemplo-de-perfil");
+			// 	const docSnap = await getDoc(docRef);
+
+			// 	if (docSnap.exists()) {
+			// 		console.log("Document data:", docSnap.data());
+			// 	} else {
+			// 		// doc.data() will be undefined in this case
+			// 		console.log("No such document!");
+			// 	}
+			// });
+
+			// document.getElementById('btn-teste').addEventListener('click', async () => {
+			// 	console.log('aaaa');
+			// 	const q = query(collection(db, "aluminios"));
+
+			// 	const querySnapshot = await getDocs(q);
+			// 	querySnapshot.forEach((doc) => {
+			// 		// doc.data() is never undefined for query doc snapshots
+			// 		console.log(doc.id, " => ", doc.data());
+			// 	});
+			// });
+		</script>
+
+		<script>
+
+		</script>
+	</body>
+
+</html>

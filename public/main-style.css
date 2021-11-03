@@ -1,0 +1,9 @@
+.form-control:focus, .form-select:focus {
+    border-color: var(--bs-yellow);
+    box-shadow: 0 0 0px 3px rgba(255, 193, 7, 0.4);
+}
+
+#add-new:hover, .row-struct:hover {
+    border: 1px solid var(--bs-yellow) !important;
+    cursor: pointer;
+}
