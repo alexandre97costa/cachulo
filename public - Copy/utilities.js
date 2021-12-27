@@ -10,7 +10,7 @@ maximizarModal.addEventListener('show.bs.modal', (e) => {
 
 
 
-function newElem(classes = [], elementType = 'div', attributes = [], innerTextArg = '') {
+function newElem(classes = [], elementType = 'div', attributes = []) {
     var newElement = document.createElement(elementType);
     for (let i = 0; i < classes.length; i++) {
         newElement.classList.add(classes[i]);
@@ -18,8 +18,6 @@ function newElem(classes = [], elementType = 'div', attributes = [], innerTextAr
     for (let i = 0; i < attributes.length; i++) {
         newElement.setAttribute(attributes[i][0], attributes[i][1]);
     }
-    if (innerTextArg != '') { newElement.innerText = innerTextArg; }
-    
     return newElement;
 }
 
@@ -108,15 +106,14 @@ function newItem(itemType = '', titleId) {
             let aluSerie_value = newElem(['value-child', 'text-warning'], 'span');
             aluSerie_value.innerText = '...';
             aluSerie.appendChild(aluSerie_value);
-            let aluSerie_select = newElem(
-                ['input-minimized', 'form-select', 'text-muted', 'fs-5', 'mb-3'],
-                'select',
+            let aluSerie_input = newElem(
+                ['input-minimized', 'form-control', 'text-muted', 'fs-5', 'mb-3'],
+                'input',
                 [
                     ['type', 'text'],
                     ['placeholder', 'Escolhe uma...']
                 ]);
-            aluSerie_select.appendChild(newElem([], 'option', [['selected', 'true']], 'Escolhe uma série...'))
-            aluSerie_select.addEventListener('input', (e) => { updateValue(e, aluSerie_value, 'text') })
+            aluSerie_input.addEventListener('input', (e) => { updateValue(e, aluSerie_value, 'text') })
 
             // Referencia
             let aluRef = newElem(['text-muted', 'fw-bold', 'p-0', 'm-0']);
@@ -129,15 +126,14 @@ function newItem(itemType = '', titleId) {
                 'input',
                 [
                     ['type', 'text'],
-                    ['placeholder', 'Escolhe a série primeiro'],
-                    ['disabled', 'true']
+                    ['placeholder', 'Escolhe uma...']
                 ]);
             aluRef_input.addEventListener('input', (e) => { updateValue(e, aluRef_value, 'text') })
 
             appendChildren(newItemContainer,
                 [
                     aluWidth, aluWidth_input,
-                    aluSerie, aluSerie_select,
+                    aluSerie, aluSerie_input,
                     aluRef, aluRef_input
                 ]);
             break;

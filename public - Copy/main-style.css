@@ -1,0 +1,190 @@
+/* Bootstrap Icons */
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css");
+
+:root {
+    --gray: #EBECF0;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--bs-yellow);
+    box-shadow: 0 0 0px 2px rgba(255, 193, 7, 0.5);
+}
+
+.input-group:focus-within {
+    box-shadow: 0 0 0px 2px rgba(255, 193, 7, 0.5);
+}
+
+.bg-gray, .bg-grey {
+    background-color: var(--gray);
+}
+
+.btn-secondary {
+    background-color: rgba(0, 0, 0, 0.15);
+    border: none;
+}
+.btn-outline-secondary {
+    border-color: rgba(0, 0, 0, 0.2);
+}
+.btn-outline-secondary:hover {
+    border-color: var(--bs-yellow);
+    background-color: var(--bs-yellow);
+}
+.btn-info {
+    background-color: var(--bs-gray);
+    border: none;
+}
+.hover-bg-red:hover {
+    background-color: rgba(231, 14, 14, 0.7);
+}
+.hover-cl-black:hover {
+    color: black;
+}
+
+.btn-success {
+    background-color: rgb(20, 168, 82);
+}
+
+.btn-danger {
+    background-color: rgb(228, 34, 0);
+}
+
+.btn-block {
+    width: 100%;
+}
+
+.text-50-gray {
+    color: rgba(0, 0, 0, 0.55);
+}
+
+.row-struct, .row-header {
+    border-width: 3px !important;
+}
+
+.border-w-3 {
+    border-width: 4px !important;
+}
+
+#add-new:hover {
+    /* border: 1px solid var(--bs-yellow) !important; */
+    cursor: pointer;
+}
+
+.caret-container {
+    position: absolute;
+    top: 0;
+    left: -2.85rem;
+}
+
+/* ########################## */
+.nice-cock-bro {
+    height: 200vh;
+}
+
+.very-rounded {
+    border-radius: 0.75rem;
+}
+
+.outer-container {
+    min-height: 400px;
+}
+
+.properties-row:not(:hover) .btn-group  { opacity: 0.3; }
+.properties-row:not(:hover) i { opacity: 0; }
+
+.slim-shady {
+    box-shadow: 0px 4px rgba(0, 0, 0, 0.2);
+}
+
+.spacer {
+    height: 0px;
+    width: 100%;
+    transition: ease-out 0.1s;
+}
+
+.input-minimized {
+    transition: 0.15s;
+}
+
+.spacer {
+    height: 20px;
+}
+
+/* .item-container { height: 100%;} */
+.item-container:not(:hover) .spacer {
+    height: 0px;
+}
+
+.item-container:not(:hover) .input-minimized {
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    box-shadow: 0 0 0 0 transparent;
+}
+
+.item-container:not(:hover) button.input-minimized {
+    display: none;
+}
+
+.item-container:hover button.input-minimized {
+    display: inline-block;
+}
+
+.item-container:hover .value-child {
+    opacity: 0;
+    transition: 0.2s;
+}
+
+.name-input-hidden {
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+}
+
+/* #### ANIMATIONS #### */
+
+.main-row { animation: fade-in-main 0.5s ease-in-out 0s forwards; }
+.item-container { animation: fade-in 0.5s ease-in-out 0s forwards; }
+@keyframes fade-in-main {
+    from { opacity: 0; }
+}
+@keyframes fade-in {
+    0% { opacity: 0; max-height: 0px; transform: none;}
+    50% {opacity: 0; max-height: 400px; transform: translateX(-50px);}
+    100% { opacity: 1; max-height: 1000px; transform: none;}
+}
+.fade-out {animation: fade-out 0.6s ease-in-out 0s forwards;}
+@keyframes fade-out {
+    0% {
+        opacity: 1;
+        max-block-size: 400px;
+        transform: none;
+    }
+    50% {
+        opacity: 0;        
+        max-block-size: 400px;
+        transform: scale(1.2);
+    }
+
+    100% {
+        opacity: 0;
+        max-block-size: 0px;
+    }
+}
+
+.fade-out-main {animation: fade-out-main 0.8s ease-in-out 0s forwards;}
+@keyframes fade-out-main {
+    0% {
+        opacity: 1;
+        max-block-size: 10000px;
+    }
+    40% {
+        opacity: 0;        
+    }
+
+    100% {
+        opacity: 0;
+        max-block-size: 0px;
+    }
+}
