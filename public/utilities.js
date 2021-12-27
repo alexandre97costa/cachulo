@@ -19,7 +19,7 @@ function newElem(classes = [], elementType = 'div', attributes = [], innerTextAr
         newElement.setAttribute(attributes[i][0], attributes[i][1]);
     }
     if (innerTextArg != '') { newElement.innerText = innerTextArg; }
-    
+
     return newElement;
 }
 
@@ -71,9 +71,7 @@ function newSubCategory(categoryType = '', titleId) {
 
     appendChildren(categoryContainer, [
         titleContainer,
-        addItemContainer,
-        newItem(categoryType, titleId),
-        newItem(categoryType, titleId),
+        addItemContainer
     ])
 
     spacerCol.appendChild(categoryContainer);
@@ -108,15 +106,19 @@ function newItem(itemType = '', titleId) {
             let aluSerie_value = newElem(['value-child', 'text-warning'], 'span');
             aluSerie_value.innerText = '...';
             aluSerie.appendChild(aluSerie_value);
-            let aluSerie_select = newElem(
-                ['input-minimized', 'form-select', 'text-muted', 'fs-5', 'mb-3'],
-                'select',
-                [
-                    ['type', 'text'],
-                    ['placeholder', 'Escolhe uma...']
-                ]);
-            aluSerie_select.appendChild(newElem([], 'option', [['selected', 'true']], 'Escolhe uma série...'))
-            aluSerie_select.addEventListener('input', (e) => { updateValue(e, aluSerie_value, 'text') })
+            let aluSerie_select = newElem(['input-minimized', 'form-select', 'text-muted', 'fs-5', 'mb-3'], 'select',);
+            aluSerie_select.appendChild(newElem([], 'option', [['selected', 'true'], ['disabled', 'true']], 'Escolhe uma série...'));
+            aluSerie_select.addEventListener('change', (e) => { updateValue(e, aluSerie_value, 'text') });
+
+            var obj = cachulo.aluminios;
+            for (var key in obj) {
+                if (obj.hasOwnProperty(key)) {
+                    console.log(key);
+                    console.log(obj[key]);
+                    aluSerie_select.appendChild(newElem([], 'option', [['value', key]], key));
+
+                }
+            }
 
             // Referencia
             let aluRef = newElem(['text-muted', 'fw-bold', 'p-0', 'm-0']);
@@ -124,21 +126,32 @@ function newItem(itemType = '', titleId) {
             let aluRef_value = newElem(['value-child', 'text-warning'], 'span');
             aluRef_value.innerText = '...';
             aluRef.appendChild(aluRef_value);
-            let aluRef_input = newElem(
-                ['input-minimized', 'form-control', 'text-muted', 'fs-5', 'mb-3'],
-                'input',
-                [
-                    ['type', 'text'],
-                    ['placeholder', 'Escolhe a série primeiro'],
-                    ['disabled', 'true']
-                ]);
-            aluRef_input.addEventListener('input', (e) => { updateValue(e, aluRef_value, 'text') })
+            let aluRef_select = newElem(['input-minimized', 'form-select', 'text-muted', 'fs-5', 'mb-3'], 'select', [['disabled', 'true']]);
+            aluRef_select.appendChild(newElem([], 'option', [['selected', 'true']], '(vazio)'));
+            aluRef_select.addEventListener('input', (e) => { updateValue(e, aluRef_value, 'text') });
+
+            // For syncing the values of both selects (serie + ref)
+            aluSerie_select.addEventListener('input', (e) => {
+                // delete all options
+                aluRef_select.innerHTML = '';
+
+                aluRef_select.removeAttribute('disabled');
+                // Add default option to ref
+                aluRef_select.appendChild(newElem([], 'option', [['selected', 'true'], ['disabled', 'true']], 'Escolhe uma ref...'));
+                // Feed the select with the right values
+                var refArray = cachulo.aluminios[e.path[0].options[e.path[0].options.selectedIndex].value];
+                refArray.forEach(ref => {
+                    aluRef_select.appendChild(newElem([], 'option', [['value', ref]], ref));
+                });
+                // Update aluRef_value to show nothing again
+                updateValue('...', aluRef_value, 'other')
+            });
 
             appendChildren(newItemContainer,
                 [
                     aluWidth, aluWidth_input,
                     aluSerie, aluSerie_select,
-                    aluRef, aluRef_input
+                    aluRef, aluRef_select
                 ]);
             break;
 
@@ -272,6 +285,8 @@ function updateValue(event, spanElement, inputType = '') {
         case 'text':
             spanElement.innerText = event.target.value.toUpperCase();
             break;
+        case 'other':
+            spanElement.innerText = event.toUpperCase();
 
         default:
             break;

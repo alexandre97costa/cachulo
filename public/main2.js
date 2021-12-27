@@ -21,7 +21,7 @@ function addJanela2() {
 
     //? strucutre properties (name, collapse, delete, duplicate)
     let propertiesRow = newElem(['row','properties-row', 'ps-4']);
-    let propertiesNameContainer = newElem(['col-8', 'ps-4', 'pe-5', 'pt-4']);
+    let propertiesNameContainer = newElem(['col-md-8', 'col-12', 'ps-4', 'pe-5', 'pt-4']);
 
     let propertiesNameInput = newElem(
         ['name-input-hidden', 'form-control', 'mb-1'],
@@ -39,7 +39,7 @@ function addJanela2() {
 
     appendChildren(propertiesNameContainer, [propertiesNameInput, propertiesNameTitle]);
 
-    let propertiesButtonsGroup = newElem(['btn-group', 'col-4', 'd-flex', 'justify-content-end', 'my-4', 'px-5']);
+    let propertiesButtonsGroup = newElem(['btn-group', 'col-md-4', 'col-12', 'my-4', 'px-5']);
     let propertiesBtnCollapse = newElem(
         ['btn', 'btn-outline-secondary', 'hover-cl-black', 'ms-5', 'fw-bold'],
         'button',
@@ -65,7 +65,7 @@ function addJanela2() {
     appendChildren(propertiesButtonsGroup, [propertiesBtnCollapse, propertiesBtnDelete])
 
     //? structure sub-categories (alu + vid + ace)
-    let itemsRow = newElem(['row', 'row-cols-md-3']);
+    let itemsRow = newElem(['row', 'row-cols-lg-3', 'row-cols-1']);
 
     let alu = newSubCategory('alu', titleId);
     let vid = newSubCategory('vid', titleId);
@@ -76,9 +76,6 @@ function addJanela2() {
     appendChildren(itemsRow, [alu, vid, ace]);
     appendChildren(mainRow, [propertiesRow, itemsRow]);
     appendChildren(mainContainer, [propertiesRow, mainRow]);
-
-    console.log('Finished addJanela2().');
-
 }
 
 
