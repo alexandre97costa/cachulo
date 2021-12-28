@@ -32,7 +32,7 @@ function appendChildren(parentElement, childrenArray = []) {
 function newSubCategory(categoryType = '', titleId) {
     //? Every category needs a container div for easily
     //? adding space in-between category (margin in .col messes everything)
-    let spacerCol = newElem(['col', 'p-3']);
+    let spacerCol = newElem(['col', 'p-3', 'pt-0']);
     let categoryContainer = newElem(['row', 'bg-gray', 'very-rounded', 'ms-1', 'p-3']);
 
     let titleContainer = newElem(['col-8']);
@@ -124,9 +124,15 @@ function newItem(itemType = '', titleId, copyContent = false, contentArray = [])
                     ['list', 'datalistSerie' + countAlus]
                 ]);
             let aluSerie_dataList = newElem([], 'datalist', [['id', 'datalistSerie' + countAlus]]);
-            // aluSerie_select.appendChild(newElem([], 'option', [['selected', 'true'], ['disabled', 'true']], 'Escolhe uma série...'));
             aluSerie_input.addEventListener('change', (e) => { updateValue(e, aluSerie_value, 'text') });
-            aluSerie_input.addEventListener('focus', (e) => { aluSerie_input.value = '' });
+            aluSerie_input.addEventListener('focus', (e) => {
+                aluSerie_input.value = '';
+                updateValue('...', aluSerie_value, 'other');
+                updateValue('...', aluRef_value, 'other');
+                aluRef_select.innerHTML = '';
+                aluRef_select.setAttribute('disabled', 'true');
+                aluRef_select.appendChild(newElem([], 'option', [['selected', 'true']], '(vazio)'));
+            });
 
             var obj = cachulo.aluminios;
             for (var key in obj) {
@@ -150,7 +156,7 @@ function newItem(itemType = '', titleId, copyContent = false, contentArray = [])
 
             // For syncing the values of both selects (serie + ref)
             aluSerie_input.addEventListener('input', (e) => {
-
+                aluSerie_input.classList.remove('red-focus');
                 aluRef_select.innerHTML = '';
 
                 // will try to get refs from the input value
@@ -164,7 +170,8 @@ function newItem(itemType = '', titleId, copyContent = false, contentArray = [])
                     aluRef_select.removeAttribute('disabled');
                     aluRef_select.insertBefore(newElem([], 'option', [['selected', 'true'], ['disabled', 'true']], 'Escolhe uma ref...'), aluRef_select.children[0]);
                 } catch (error) {
-                    // if the values are not right then it will disbale the ref_select and add the (vazio) again
+                    if (aluSerie_input != '') { aluSerie_input.classList.add('red-focus'); }
+                    // if the values are not right then it will disable the ref_select and add the (vazio) again
                     aluRef_select.setAttribute('disabled', 'true');
                     aluRef_select.appendChild(newElem([], 'option', [['selected', 'true']], '(vazio)'));
                 }
@@ -332,10 +339,10 @@ function updateValue(event, spanElement, inputType = '') {
             spanElement.innerText = parseFloat(event.target.value.replace(/[e\+\-]/gi, '')).toFixed(2) + 'm';
             break;
         case 'text':
-            spanElement.innerText = event.target.value.toUpperCase();
+            spanElement.innerText = event.target.value.toLowerCase();
             break;
         case 'other':
-            spanElement.innerText = event.toUpperCase();
+            spanElement.innerText = event.toLowerCase();
 
         default:
             break;
@@ -343,16 +350,16 @@ function updateValue(event, spanElement, inputType = '') {
 }
 
 function janelaNameInput(event, inputElement) {
-    let titleH3 = event.path[0];
+    let titleH3 = (event.path[0].nodeName == 'P') ? event.path[0] : event.path[1];
     titleH3.style.display = 'none';
     inputElement.setAttribute('placeholder', titleH3.textContent);
     inputElement.classList.remove('name-input-hidden');
     inputElement.focus();
 }
 
-function saveJanelaName(event, titleElement) {
+function saveJanelaName(event, titleElement, count) {
     let inputElement = event.path[0];
-    titleElement.innerText = (inputElement.value == '') ? 'Nova Janela' : inputElement.value;
+    titleElement.innerText = (inputElement.value == '') ? 'Janela ' + count : inputElement.value;
     inputElement.classList.add('name-input-hidden');
     titleElement.style.display = 'block';
     titleElement.appendChild(newElem(['bi', 'bi-pencil-square', 'ms-3', 'text-warning'], 'i'));
