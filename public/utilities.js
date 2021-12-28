@@ -8,6 +8,18 @@ maximizarModal.addEventListener('show.bs.modal', (e) => {
     maximizarModal.querySelector('.modal-title').textContent = janelaName + ' / ' + category;
 });
 
+var titleModal = document.getElementById('titleModal');
+titleModal.addEventListener('show.bs.modal', (e) => {
+    let titleElement = e.relatedTarget;
+    let titleText = titleElement.innerText;
+
+    titleModal.querySelector('.modal-title').innerHTML = ''
+    titleModal.querySelector('.modal-title').append(
+        newElem(['bi', 'bi-gear-fill', 'me-3'], 'i'),
+        'Dados de \'' + titleText + '\''
+    )
+})
+
 
 
 function newElem(classes = [], elementType = 'div', attributes = [], innerTextArg = '') {
