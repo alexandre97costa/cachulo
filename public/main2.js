@@ -8,9 +8,6 @@ function addJanela2() {
     // cada uma com alu, vid e ace
 
     countStructs++;
-    countAlus++;
-    countVids++;
-    countAces++;
 
     // main container
     let mainRow = newElem(

@@ -24,6 +24,7 @@ var countAlus = 0;
 var countVids = 0;
 var countAces = 0;
 
+//! addJanela() is deprecated
 function addJanela() {
     countStructs++;
     countAlus++;
@@ -184,11 +185,7 @@ function addJanela() {
     mainContainer.appendChild(row);
 }
 
-
-
-
-
-
+//! deprecated
 function addAluTo(parent) {
     // Aluminios > Grouping (div .row)
     let aluGroupRow = document.createElement('div');

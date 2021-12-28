@@ -78,91 +78,119 @@ function newSubCategory(categoryType = '', titleId) {
     return spacerCol;
 }
 
-function newItem(itemType = '', titleId) {
+function newItem(itemType = '', titleId, copyContent = false, contentArray = []) {
+
+    //* Explaining the contentArray argument
+    // Used for copying an item, while passing certain values as arguments.
+    // We just create another element completely, and replace the placeholders with
+    // actual content from the item that ordered the duplication.
+    //? The function only uses content from contentArray if copyContent is set to true
+
+
     let newItemContainer = newElem(['item-container', 'slim-shady', 'bg-white', 'rounded', 'py-2', 'mt-3']);
+    newItemContainer.addEventListener('onmouseout', (e) => { document.body.focus() });
     let categoryName = '';
 
     switch (itemType) {
         case 'alu':
             categoryName = 'Alumínios';
-            // Comprimento
+            countAlus++;
+            //* Comprimento
             let aluWidth = newElem(['text-muted', 'fw-bold', 'p-0', 'm-0']);
             aluWidth.innerText = 'Comprimento: ';
             let aluWidth_value = newElem(['value-child', 'text-warning'], 'span');
-            aluWidth_value.innerText = '0.00m';
+            aluWidth_value.innerText = (copyContent) ? contentArray[0].toFixed(2) + 'm' : '0.00m';
             aluWidth.appendChild(aluWidth_value);
             let aluWidth_input = newElem(
                 ['input-minimized', 'form-control', 'text-muted', 'fs-5', 'mb-3'],
                 'input',
                 [
                     ['type', 'number'],
-                    ['placeholder', '0']
+                    ['placeholder', (copyContent) ? contentArray[0] : '0']
                 ]);
             aluWidth_input.addEventListener('input', (e) => { updateValue(e, aluWidth_value, 'number') });
 
-            // Serie
+            //* Serie
             let aluSerie = newElem(['text-muted', 'fw-bold', 'p-0', 'm-0']);
             aluSerie.innerText = 'Série: ';
             let aluSerie_value = newElem(['value-child', 'text-warning'], 'span');
-            aluSerie_value.innerText = '...';
+            aluSerie_value.innerText = (copyContent) ? contentArray[1] : '...';
             aluSerie.appendChild(aluSerie_value);
-            let aluSerie_select = newElem(['input-minimized', 'form-select', 'text-muted', 'fs-5', 'mb-3'], 'select',);
-            aluSerie_select.appendChild(newElem([], 'option', [['selected', 'true'], ['disabled', 'true']], 'Escolhe uma série...'));
-            aluSerie_select.addEventListener('change', (e) => { updateValue(e, aluSerie_value, 'text') });
+            let aluSerie_input = newElem(
+                ['input-minimized', 'form-control', 'text-muted', 'fs-5', 'mb-3'],
+                'input',
+                [
+                    ['placeholder', 'Escolhe uma série...'],
+                    ['list', 'datalistSerie' + countAlus]
+                ]);
+            let aluSerie_dataList = newElem([], 'datalist', [['id', 'datalistSerie' + countAlus]]);
+            // aluSerie_select.appendChild(newElem([], 'option', [['selected', 'true'], ['disabled', 'true']], 'Escolhe uma série...'));
+            aluSerie_input.addEventListener('change', (e) => { updateValue(e, aluSerie_value, 'text') });
+            aluSerie_input.addEventListener('focus', (e) => { aluSerie_input.value = '' });
 
             var obj = cachulo.aluminios;
             for (var key in obj) {
                 if (obj.hasOwnProperty(key)) {
                     console.log(key);
                     console.log(obj[key]);
-                    aluSerie_select.appendChild(newElem([], 'option', [['value', key]], key));
+                    aluSerie_dataList.appendChild(newElem([], 'option', [['value', key]]));
 
                 }
             }
 
-            // Referencia
+            //* Referencia
             let aluRef = newElem(['text-muted', 'fw-bold', 'p-0', 'm-0']);
             aluRef.innerText = 'Ref: ';
             let aluRef_value = newElem(['value-child', 'text-warning'], 'span');
-            aluRef_value.innerText = '...';
+            aluRef_value.innerText = (copyContent) ? contentArray[2] : '...';
             aluRef.appendChild(aluRef_value);
             let aluRef_select = newElem(['input-minimized', 'form-select', 'text-muted', 'fs-5', 'mb-3'], 'select', [['disabled', 'true']]);
             aluRef_select.appendChild(newElem([], 'option', [['selected', 'true']], '(vazio)'));
             aluRef_select.addEventListener('input', (e) => { updateValue(e, aluRef_value, 'text') });
 
             // For syncing the values of both selects (serie + ref)
-            aluSerie_select.addEventListener('input', (e) => {
-                // delete all options
+            aluSerie_input.addEventListener('input', (e) => {
+
                 aluRef_select.innerHTML = '';
 
-                aluRef_select.removeAttribute('disabled');
-                // Add default option to ref
-                aluRef_select.appendChild(newElem([], 'option', [['selected', 'true'], ['disabled', 'true']], 'Escolhe uma ref...'));
-                // Feed the select with the right values
-                var refArray = cachulo.aluminios[e.path[0].options[e.path[0].options.selectedIndex].value];
-                refArray.forEach(ref => {
-                    aluRef_select.appendChild(newElem([], 'option', [['value', ref]], ref));
-                });
+                // will try to get refs from the input value
+                try {
+                    // Feed the datalist with the values
+                    var refArray = cachulo.aluminios[e.target.value];
+                    refArray.forEach(ref => {
+                        aluRef_select.appendChild(newElem([], 'option', [['value', ref]], ref));
+                    });
+                    // Add default option to ref
+                    aluRef_select.removeAttribute('disabled');
+                    aluRef_select.insertBefore(newElem([], 'option', [['selected', 'true'], ['disabled', 'true']], 'Escolhe uma ref...'), aluRef_select.children[0]);
+                } catch (error) {
+                    // if the values are not right then it will disbale the ref_select and add the (vazio) again
+                    aluRef_select.setAttribute('disabled', 'true');
+                    aluRef_select.appendChild(newElem([], 'option', [['selected', 'true']], '(vazio)'));
+                }
+
                 // Update aluRef_value to show nothing again
-                updateValue('...', aluRef_value, 'other')
+                updateValue('...', aluRef_value, 'other');
+
             });
 
             appendChildren(newItemContainer,
                 [
                     aluWidth, aluWidth_input,
-                    aluSerie, aluSerie_select,
+                    aluSerie, aluSerie_input, aluSerie_dataList,
                     aluRef, aluRef_select
                 ]);
             break;
 
         case 'vid':
             categoryName = 'Vidros';
+            countVids++;
             // Comprimento
-            let vidWidth = newElem(['text-muted', 'fw-bold', 'fs-6', 'p-0', 'm-0']);
-            vidWidth.innerText = 'Comprimento: ';
-            let vidWidth_value = newElem(['value-child', 'text-warning'], 'span');
-            vidWidth_value.innerText = '0.00m';
-            vidWidth.appendChild(vidWidth_value);
+            let vidMeasures = newElem(['text-muted', 'fw-bold', 'p-0', 'm-0']);
+            vidMeasures.innerText = 'Altura x Largura: ';
+            let vidMeasures_value = newElem(['value-child', 'text-warning'], 'span');
+            vidMeasures_value.innerText = '0 x 0 (0m²)';
+            vidMeasures.appendChild(vidMeasures_value);
             let vidWidth_input = newElem(
                 ['input-minimized', 'form-control', 'text-muted', 'fs-5'],
                 'input',
@@ -184,7 +212,7 @@ function newItem(itemType = '', titleId) {
 
             appendChildren(newItemContainer,
                 [
-                    vidWidth, vidWidth_input,
+                    vidMeasures, vidWidth_input,
                     vidSerie, newElem(['spacer']),
                     vidRef, newElem(['spacer'])
                 ]);
@@ -192,6 +220,7 @@ function newItem(itemType = '', titleId) {
 
         case 'ace':
             categoryName = 'Acessórios';
+            countAces++;
             // Comprimento
             let aceWidth = newElem(['text-muted', 'fw-bold', 'fs-6', 'p-0', 'm-0']);
             aceWidth.innerText = 'Comprimento: ';
@@ -240,7 +269,8 @@ function newItem(itemType = '', titleId) {
             ['data-bs-toggle', 'modal'],
             ['data-bs-target', '#maximizarModal'],
             ['data-janela-name', titleId],
-            ['data-category', categoryName]
+            ['data-category', categoryName],
+            ['title', 'Maximizar\n(Abre numa janela)']
         ]);
     btnMaximizar.innerText = 'Maximizar';
     let btnGroup = newElem(['btn-group', 'col-4', 'input-minimized', 'ps-2'], 'div', [['role', 'group']]);
@@ -248,14 +278,33 @@ function newItem(itemType = '', titleId) {
         ['input-minimized', 'btn', 'btn-success', 'py-1'],
         'button',
         [
-            ['type', 'button']
+            ['type', 'button'],
+            ['title', 'Duplicar\n(Ainda não funfa)']
         ]);
     btnDuplicate.appendChild(newElem(['bi', 'bi-back'], 'i'));
+    btnDuplicate.addEventListener('click', (e) => {
+        //TODO : get duplication working for 'select' elements
+        switch (itemType) {
+            case 'alu':
+                newItemContainer.parentNode.appendChild(newItem(itemType, titleId, true, [0, '...', '...']));
+                break;
+            case 'vid':
+                newItemContainer.parentNode.appendChild(newItem(itemType, titleId, true, [0, 0, '...']));
+                break;
+            case 'ace':
+                newItemContainer.parentNode.appendChild(newItem(itemType, titleId, false, [undefined, undefined, undefined]));
+                break;
+
+            default:
+                break;
+        }
+    })
     let btnDelete = newElem(
         ['input-minimized', 'btn', 'btn-danger', 'py-1'],
         'button',
         [
-            ['type', 'button']
+            ['type', 'button'],
+            ['title', 'Eliminar']
         ]);
     btnDelete.appendChild(newElem(['bi', 'bi-trash-fill'], 'i'))
     btnDelete.addEventListener('click', (e) => {
