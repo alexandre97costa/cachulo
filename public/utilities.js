@@ -32,8 +32,8 @@ function appendChildren(parentElement, childrenArray = []) {
 function newSubCategory(categoryType = '', titleId) {
     //? Every category needs a container div for easily
     //? adding space in-between category (margin in .col messes everything)
-    let spacerCol = newElem(['col', 'p-3', 'pt-0']);
-    let categoryContainer = newElem(['row', 'bg-gray', 'very-rounded', 'ms-1', 'p-3']);
+    let spacerCol = newElem(['col', 'p-', 'pt-0']);
+    let categoryContainer = newElem(['row', 'bg-gray', 'very-rounded', 'me-', 'p-3']);
 
     let titleContainer = newElem(['col-8']);
     let title = newElem(['h4', 'pt-1'], 'p');
@@ -156,7 +156,7 @@ function newItem(itemType = '', titleId, copyContent = false, contentArray = [])
 
             // For syncing the values of both selects (serie + ref)
             aluSerie_input.addEventListener('input', (e) => {
-                aluSerie_input.classList.remove('red-focus');
+                aluSerie_input.classList.remove('is-invalid');
                 aluRef_select.innerHTML = '';
 
                 // will try to get refs from the input value
@@ -170,7 +170,7 @@ function newItem(itemType = '', titleId, copyContent = false, contentArray = [])
                     aluRef_select.removeAttribute('disabled');
                     aluRef_select.insertBefore(newElem([], 'option', [['selected', 'true'], ['disabled', 'true']], 'Escolhe uma ref...'), aluRef_select.children[0]);
                 } catch (error) {
-                    if (aluSerie_input != '') { aluSerie_input.classList.add('red-focus'); }
+                    if (aluSerie_input != '') { aluSerie_input.classList.add('is-invalid'); }
                     // if the values are not right then it will disable the ref_select and add the (vazio) again
                     aluRef_select.setAttribute('disabled', 'true');
                     aluRef_select.appendChild(newElem([], 'option', [['selected', 'true']], '(vazio)'));

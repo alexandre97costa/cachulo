@@ -150,7 +150,7 @@
 
 /* #### ANIMATIONS #### */
 
-.main-row { animation: fade-in-main 0.5s ease-in-out 0s forwards; }
+.main-col { animation: fade-in-main 0.5s ease-in-out 0s forwards; }
 .item-container { animation: fade-in 0.5s ease-in-out 0s forwards; }
 @keyframes fade-in-main {
     from { opacity: 0; }

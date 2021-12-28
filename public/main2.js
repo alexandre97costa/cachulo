@@ -3,18 +3,22 @@ function addJanela2() {
     countStructs++;
 
     // main container
-    let mainRow = newElem(
-        ['row', 'main-row', 'border', 'border-warning', 'border-w-3', 'border-start-0', 'border-end-0', 'border-top-0', 'px-4'],
+    let mainCol = newElem(
+        ['col', 'main-col', 'border', 'border-warning', 'border-w-3', 'border-start-0', 'border-end-0', 'border-top-0', 'px-5'],
         'div',
         [['id', 'struct-' + countStructs]]
     );
 
     //? strucutre properties (name, collapse, delete, duplicate)
-    let propertiesRow = newElem(['row', 'properties-row', 'ps-3']);
-    let propertiesNameContainer = newElem(['col-md-8', 'col-12', 'ps-4', 'pe-5', 'pt-4']);
+    let propertiesRow = newElem(['row', 'properties-row', 'py-4', 'bg-danger'],'div',[[]], 'properties-row');
 
+    
+
+
+
+    let propertiesNameContainer = newElem(['col-md-8', 'col-12', 'ps-4', 'pe-5', 'pt-4']);
     let propertiesNameInput = newElem(
-        ['name-input-hidden', 'form-control', 'mb-1'],
+        ['name-input-hidden', 'form-control', 'mb-1', 'col-6'],
         'input',
         [
             ['type', 'text']
@@ -48,28 +52,28 @@ function addJanela2() {
         [['type', 'button']]);
     propertiesBtnDelete.innerText = 'Eliminar';
     propertiesBtnDelete.addEventListener('click', (e) => {
-        mainRow.classList.remove('fade-in-main');
-        mainRow.classList.add('fade-out-main');
+        mainCol.classList.remove('fade-in-main');
+        mainCol.classList.add('fade-out-main');
         propertiesRow.classList.add('fade-out-main');
         setTimeout(function () {
-            mainRow.parentNode.removeChild(mainRow);
+            mainCol.parentNode.removeChild(mainCol);
             propertiesRow.parentNode.removeChild(propertiesRow);
         }, 800);
     })
     appendChildren(propertiesButtonsGroup, [propertiesBtnCollapse, propertiesBtnDelete])
 
     //? structure sub-categories (alu + vid + ace)
-    let itemsRow = newElem(['row', 'row-cols-lg-3', 'row-cols-1', 'collapse', 'show'], 'div', [['id', 'itemsRow' + countStructs]]);
+    let itemsRow = newElem(['row', 'row-cols-lg-3', 'row-cols-1', 'gx-5', 'pb-4', 'collapse', 'show'], 'div', [['id', 'itemsRow' + countStructs]]);
 
     let alu = newSubCategory('alu', titleId);
     let vid = newSubCategory('vid', titleId);
     let ace = newSubCategory('ace', titleId);
 
     // append everything to main
-    appendChildren(propertiesRow, [propertiesNameContainer, propertiesButtonsGroup]);
+    // appendChildren(propertiesRow, [propertiesNameContainer, propertiesButtonsGroup]);
     appendChildren(itemsRow, [alu, vid, ace]);
-    appendChildren(mainRow, [propertiesRow, itemsRow]);
-    appendChildren(mainContainer, [mainRow]);
+    appendChildren(mainCol, [propertiesRow, itemsRow]);
+    appendChildren(mainContainer, [mainCol]);
 }
 
 
