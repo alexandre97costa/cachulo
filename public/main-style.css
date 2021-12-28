@@ -80,10 +80,6 @@
 .nice-cock-bro {
     height: 200vh;
 }
-.red-focus:focus {
-    border-color: var(--bs-red);
-    box-shadow: 0 0 0px 2px rgba(255, 7, 7, 0.5);
-}
 
 .very-rounded {
     border-radius: 0.75rem;

@@ -32,7 +32,7 @@ function appendChildren(parentElement, childrenArray = []) {
 function newSubCategory(categoryType = '', titleId) {
     //? Every category needs a container div for easily
     //? adding space in-between category (margin in .col messes everything)
-    let spacerCol = newElem(['col', 'p-', 'pt-0']);
+    let spacerCol = newElem(['col', 'pt-0']);
     let categoryContainer = newElem(['row', 'bg-gray', 'very-rounded', 'me-', 'p-3']);
 
     let titleContainer = newElem(['col-8']);
@@ -46,8 +46,7 @@ function newSubCategory(categoryType = '', titleId) {
         [
             ['type', 'button'],
             ['title', 'Adicionar elemento']
-        ]);
-    addItem.innerText = '+';
+        ], '+');
     addItem.addEventListener('click', (e) => {
         categoryContainer.appendChild(
             newItem(categoryType, titleId)
@@ -97,7 +96,7 @@ function newItem(itemType = '', titleId, copyContent = false, contentArray = [])
             countAlus++;
             //* Comprimento
             let aluWidth = newElem(['text-muted', 'fw-bold', 'p-0', 'm-0']);
-            aluWidth.innerText = 'Comprimento: ';
+            aluWidth.innerText = 'Medida: ';
             let aluWidth_value = newElem(['value-child', 'text-warning'], 'span');
             aluWidth_value.innerText = (copyContent) ? contentArray[0].toFixed(2) + 'm' : '0.00m';
             aluWidth.appendChild(aluWidth_value);
@@ -278,8 +277,8 @@ function newItem(itemType = '', titleId, copyContent = false, contentArray = [])
             ['data-janela-name', titleId],
             ['data-category', categoryName],
             ['title', 'Maximizar\n(Abre numa janela)']
-        ]);
-    btnMaximizar.innerText = 'Maximizar';
+        ],
+        'Maximizar');
     let btnGroup = newElem(['btn-group', 'col-4', 'input-minimized', 'ps-2'], 'div', [['role', 'group']]);
     let btnDuplicate = newElem(
         ['input-minimized', 'btn', 'btn-success', 'py-1'],
