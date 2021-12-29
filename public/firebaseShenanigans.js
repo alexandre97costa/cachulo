@@ -28,20 +28,34 @@ window.onload = getMyShit()
 async function getMyShit() {
     console.log('%cRetrieving data...', 'color:limegreen;');
 
-    const query_Aluminio_Series = query(collection(db, "aluminios"));
-    const getAlu_Series = await getDocs(query_Aluminio_Series);
+    const getAlu_Series = await getDocs(query(collection(db, "aluminios")));
 
     getAlu_Series.forEach(async (serie) => {
-        // doc.data() is never undefined for query doc snapshots
-        console.log(serie.id);
-        const query_Aluminio_Series_Ref = query(collection(db, "aluminios/" + serie.id + '/perfis'));
-        const getAlu_Refs = await getDocs(query_Aluminio_Series_Ref);
-        cachulo.aluminios[serie.id] = [];
-        getAlu_Refs.forEach((ref) => {
-            cachulo.aluminios[serie.id].push(ref.id);
-            console.log(serie.id + ' / ' + ref.id);
+
+        //* Code explanation
+        // getDocs() returns a promise resolved, in the form of a querySnapshot (https://firebase.google.com/docs/reference/js/firestore_#getdocs)
+        // querySnapshots have a 'docs' array, which can then be iterated with a forEach (https://firebase.google.com/docs/reference/node/firebase.firestore.QuerySnapshot#docs)
+        // the elements on this array have an id (element.id) which we want to copy into our database object (cachulo)
+        //! We DO NOT want to: 
+        // - Declare an array outside of a loop
+        // - Use push(), as it is a mutating function
+        //? We DO want to:
+        // - declare and directly assign 'cachulo.aluminios[serie.id]'
+        // - use an immutable function, like Array.map() or Array.from(), to copy the values
+
+        const getAlu_Refs = await getDocs(query(collection(db, "aluminios/" + serie.id + '/perfis')))
+        .then((response) => {
+            cachulo.aluminios[serie.id] = Array.from(response.docs, (element) => {return element.id});
         })
+        
 
-    });
+        //* This is our initial attempt, that used Imperative Programming
+        //* Let it rest in a comment block, as it is a sign of progress!
 
+        // cachulo.aluminios[serie.id] = [];
+        // getAlu_Refs.forEach((ref) => {
+        //         cachulo.aluminios[serie.id].push(ref.id);
+        //     })
+            
+        });
 }
