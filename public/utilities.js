@@ -66,8 +66,6 @@ titleModal.addEventListener('hide.bs.modal', (e) => {
     janelaName.value = '';
     janelaAltura.value = '';
     janelaLargura.value = '';
-
-    console.log(e.target.querySelector('#janelaNameModal').value);
 });
 
 
@@ -197,10 +195,7 @@ function newItem(itemType = '', titleId, copyContent = false, contentArray = [])
             var obj = cachulo.aluminios;
             for (var key in obj) {
                 if (obj.hasOwnProperty(key)) {
-                    console.log(key);
-                    console.log(obj[key]);
                     aluSerie_dataList.appendChild(newElem([], 'option', [['value', key]]));
-
                 }
             }
 
