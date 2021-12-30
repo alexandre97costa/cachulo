@@ -20,7 +20,7 @@ const db = getFirestore();
 
 var spinner = document.getElementById('spinner');
 window.onload = getMyShit()
-    .then(console.log(cachulo))
+    .then(console.table(cachulo))
     .then(addJanela2)
     .then(spinner.parentNode.removeChild(spinner));
 

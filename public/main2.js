@@ -1,28 +1,35 @@
 function addJanela2() {
-    let mainContainer = document.getElementById('main-container');
+    const mainContainer = document.getElementById('main-container');
     countStructs++;
 
     // main container
-    let mainCol = newElem(
+    const mainCol = newElem(
         ['col', 'main-col', 'border', 'border-warning', 'border-w-3', 'border-start-0', 'border-end-0', 'border-top-0', 'px-5'],
         'div',
         [['id', 'struct-' + countStructs]]
     );
 
     //? strucutre properties (name, collapse, delete, duplicate)
-    let propertiesRow = newElem(['row', 'row-cols-1', 'row-cols-md-3', 'gx-5', 'gy-3', 'properties-row', 'pb-4', 'pt-5']);
+    const propertiesRow = newElem(['row', 'row-cols-1', 'row-cols-md-3', 'gx-5', 'gy-3', 'properties-row', 'pb-4', 'pt-5']);
 
-    let propTitle = newElem(
+    
+    const propTitle = newElem(
         ['h2', 'col-8', 'm-0'], 
         'p', 
         [
+            ['id', 'janelaTitle' + countStructs],
             ['data-bs-toggle', 'modal'],
             ['data-bs-target', '#titleModal']
         ], 
         'Janela ' + countStructs);
     propTitle.appendChild(newElem(['bi', 'bi-pencil-square', 'ms-3', 'text-warning'], 'i'));
 
-    let propMeasuresContainer = newElem(['col', 'px-3']);
+    // propTitle.insertBefore(
+    //     newElem(['text-muted', 'fw-bold', 'fs-6', 'mb-0'], 'p', [[]], 'Preço: '),
+    //     propTitle.childNodes[0]
+    // );
+
+    const propMeasuresContainer = newElem(['col', 'px-3']);
     propMeasuresContainer.appendChild(newElem(['row', 'row-cols-2', 'gx-3']));
     propMeasuresContainer.children[0]
         .appendChild(newElem(['col']))
@@ -49,12 +56,12 @@ function addJanela2() {
                     ['placeholder', 0]
                 ]));
 
-    let propAltura = newElem(['form-control'], 'input', [['type', 'number'], ['id', 'alturaJanela' + countStructs]]);
-    let propLargura = newElem(['form-control'], 'input', [['type', 'number'], ['id', 'larguraJanela' + countStructs]]);
+    const propAltura = newElem(['form-control'], 'input', [['type', 'number'], ['id', 'alturaJanela' + countStructs]]);
+    const propLargura = newElem(['form-control'], 'input', [['type', 'number'], ['id', 'larguraJanela' + countStructs]]);
     // appendChildren(propMeasuresContainer, [propAltura, propLargura]);
 
-    let propBtnGroup = newElem(['col', 'btn-group', 'bg-white', 'px-3', 'm-0']);
-    let propBtnCollapse = newElem(
+    const propBtnGroup = newElem(['col', 'btn-group', 'bg-white', 'px-3', 'm-0']);
+    const propBtnCollapse = newElem(
         ['btn', 'btn-outline-secondary', 'fw-bold'],
         'button',
         [
@@ -63,7 +70,7 @@ function addJanela2() {
             ['data-bs-target', '#itemsRow' + countStructs]
         ],
         'Minimizar');
-    let propBtnDelete = newElem(
+    const propBtnDelete = newElem(
         ['btn', 'btn-outline-secondary', 'hover-bg-red', 'fw-bold'],
         'button',
         [['type', 'button']],
@@ -84,7 +91,7 @@ function addJanela2() {
 
 
 
-    let propertiesNameContainer = newElem(['col-md-8', 'col-12', 'ps-4', 'pe-5', 'pt-4']);
+    const propertiesNameContainer = newElem(['col-md-8', 'col-12', 'ps-4', 'pe-5', 'pt-4']);
     let propertiesNameInput = newElem(
         ['name-input-hidden', 'form-control', 'mb-1', 'col-6'],
         'input',
@@ -142,10 +149,9 @@ function addJanela2() {
     appendChildren(itemsRow, [alu, vid, ace]);
     appendChildren(mainCol, [propertiesRow, itemsRow]);
     appendChildren(mainContainer, [mainCol]);
-}
 
-
-// TODO
-function addItemTo(parent) {
-
+    // after loading everything, show the titleModal
+    var titleModal = new bootstrap.Modal(document.getElementById('titleModal'));
+    //! un-comment this when the modal is ready
+    titleModal.show(propTitle);
 }

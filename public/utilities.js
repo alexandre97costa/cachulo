@@ -10,16 +10,35 @@ maximizarModal.addEventListener('show.bs.modal', (e) => {
 
 var titleModal = document.getElementById('titleModal');
 titleModal.addEventListener('show.bs.modal', (e) => {
+    // This changes the title when shown
     let titleElement = e.relatedTarget;
     let titleText = titleElement.innerText;
+    let modalTitle = titleModal.querySelector('.modal-title');
 
-    titleModal.querySelector('.modal-title').innerHTML = ''
-    titleModal.querySelector('.modal-title').append(
+    modalTitle.innerHTML = '';
+    modalTitle.append(
         newElem(['bi', 'bi-gear-fill', 'me-3'], 'i'),
         'Dados de \'' + titleText + '\''
-    )
+    );
+    
+    // this is for passing through the janela ID to the 'hide' event
+    modalTitle.setAttribute('data-janela-id', titleElement.id);
 })
 
+titleModal.addEventListener('hide.bs.modal', (e) => {
+    let modal = e.target.id;
+    let janelaName = e.target.querySelector('#janelaNameModal');
+    let janelaAltura = e.target.querySelector('#alturaModal');
+    let janelaLargura = e.target.querySelector('#larguraModal');
+
+    let titleElement = document.getElementById(e.target.querySelector('.modal-title').getAttribute('data-janela-id'));
+    titleElement.innerText = (janelaName.value == '') ? titleElement.innerText : janelaName.value;
+
+    // clear the inputs
+    janelaName.value = '';
+
+    console.log(e.target.querySelector('#janelaNameModal').value);
+});
 
 
 function newElem(classes = [], elementType = 'div', attributes = [], innerTextArg = '') {

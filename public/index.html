@@ -106,7 +106,7 @@
 				<p class="p-0 m-0 text-muted">Adicionar janela</p>
 			</div>
 		</div>
-		
+
 		<div class="nice-cock-bro"></div>
 
 
@@ -226,17 +226,38 @@
 
 		<!-- Title Modal -->
 		<div class="modal fade" id="titleModal" tabindex="-1" aria-labelledby="titleLabel" aria-hidden="true">
-			<div class="modal-dialog ">
+			<div class="modal-dialog modal-dialog-centered">
 				<div class="modal-content bg-gray">
 					<div class="modal-header">
 						<h5 class="modal-title" id="titleLabel">Opções de Janela</h5>
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
-					<div class="modal-body">
+					<div class="modal-body bg-white px-5 pt-4 pb-0">
+						<label for="janelaNameModal" class="form-label text-muted fw-bold p-0 m-0">
+							Nome: </label>
+						<input type="text" id="janelaNameModal" placeholder="Insere o nome..." autocomplete="off"
+							class="form-control text-muted fs-5 mb-3">
+						<div class="row gx-2">
+							<div class="col-6">
+								<label for="alturaModal" class="form-label text-muted fw-bold p-0 m-0">
+									Altura:</label>
+								<input type="number" id="alturaModal" placeholder="0" autocomplete="off"
+									class="form-control text-muted fs-5 mb-3">
+							</div>
+							<div class="col-6">
+								<label for="larguraModal" class="form-label text-muted fw-bold p-0 m-0">
+									Largura:</label>
+								<input type="number" id="larguraModal" placeholder="0" autocomplete="off"
+									class="form-control text-muted fs-5 mb-3">
+							</div>
+							<div class="col-12 mt-2 d-grid">
+								<button id="btnTitleModal" class="btn btn-warning fw-bold text-50-gray" type="button" data-bs-dismiss="modal">Concluído</button>
+							</div>
+						</div>
+
 					</div>
-					<div class="modal-footer">
+					<div class="modal-footer bg-white border-top-0 pt-2 pb-3 justify-content-center">
 						<small class="text-muted ">Todas as alterações são guardadas automaticamente.</small>
-						<!-- <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Guardar</button> -->
 					</div>
 				</div>
 			</div>
