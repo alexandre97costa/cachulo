@@ -15,6 +15,8 @@ titleModal.addEventListener('show.bs.modal', (e) => {
     let titleText = titleElement.innerText;
     let modalTitle = titleModal.querySelector('.modal-title');
 
+    let propDimensions = e.target.parentElement.querySelector('.prop-dimensions');
+
     modalTitle.innerHTML = '';
     modalTitle.append(
         newElem(['bi', 'bi-gear-fill', 'me-3'], 'i'),
@@ -23,6 +25,19 @@ titleModal.addEventListener('show.bs.modal', (e) => {
     
     // this is for passing through the janela ID to the 'hide' event
     modalTitle.setAttribute('data-janela-id', titleElement.id);
+    modalTitle.setAttribute('data-dimensions-id', propDimensions.id);
+
+    // this is for passing info to the inputs values
+    let nomeInput = titleModal.querySelector('#janelaNameModal');
+    let alturaInput = titleModal.querySelector('#alturaModal');
+    let larguraInput = titleModal.querySelector('#larguraModal');
+
+    let propAltura = propDimensions.querySelector('.prop-dimensions-altura')
+    let propLargura = propDimensions.querySelector('.prop-dimensions-largura')
+
+    nomeInput.value = titleText;
+    alturaInput.value = (parseFloat(propAltura.innerText) == 0) ? '' : propAltura.innerText;
+    larguraInput.value = (parseFloat(propLargura.innerText) == 0) ? '' : propLargura.innerText;
 })
 
 titleModal.addEventListener('hide.bs.modal', (e) => {
@@ -34,8 +49,23 @@ titleModal.addEventListener('hide.bs.modal', (e) => {
     let titleElement = document.getElementById(e.target.querySelector('.modal-title').getAttribute('data-janela-id'));
     titleElement.innerText = (janelaName.value == '') ? titleElement.innerText : janelaName.value;
 
+    let dimensionsElement = document.getElementById(e.target.querySelector('.modal-title').getAttribute('data-dimensions-id'));
+
+    let propAltura = dimensionsElement.querySelector('.prop-dimensions-altura');
+    propAltura.innerText = (parseFloat(janelaAltura.value) == 0 || janelaAltura.value == '') ? propAltura.innerText : janelaAltura.value;
+    propAltura.setAttribute('data-altura', janelaAltura.value);
+
+    let propLargura = dimensionsElement.querySelector('.prop-dimensions-largura');
+    propLargura.innerText = (parseFloat(janelaLargura.value) == 0 || janelaLargura.value == '') ? propLargura.innerText : janelaLargura.value;
+    propLargura.setAttribute('data-largura', janelaLargura.value);
+
+    // put the edit icon afterwards
+    titleElement.appendChild(newElem(['bi', 'bi-pencil-square', 'ms-3', 'text-warning'], 'i'));
+
     // clear the inputs
     janelaName.value = '';
+    janelaAltura.value = '';
+    janelaLargura.value = '';
 
     console.log(e.target.querySelector('#janelaNameModal').value);
 });

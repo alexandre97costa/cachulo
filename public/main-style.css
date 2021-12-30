@@ -89,8 +89,8 @@
     min-height: 400px;
 }
 
-.properties-row:not(:hover) .btn-group  { opacity: 0.3; }
-.properties-row:not(:hover) i { opacity: 0; }
+.properties-row:not(:hover) .btn-group  { opacity: 0.3;}
+.properties-row:not(:hover) i { opacity: 0; transition: 0.6s;}
 
 .slim-shady {
     box-shadow: 0px 4px rgba(0, 0, 0, 0.2);
