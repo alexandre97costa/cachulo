@@ -15,7 +15,7 @@ titleModal.addEventListener('show.bs.modal', (e) => {
     let titleText = titleElement.innerText;
     let modalTitle = titleModal.querySelector('.modal-title');
 
-    let propDimensions = e.target.parentElement.querySelector('.prop-dimensions');
+    let propDimensions = e.relatedTarget.parentElement.querySelector('.prop-dimensions');
 
     modalTitle.innerHTML = '';
     modalTitle.append(
@@ -41,7 +41,6 @@ titleModal.addEventListener('show.bs.modal', (e) => {
 })
 
 titleModal.addEventListener('hide.bs.modal', (e) => {
-    let modal = e.target.id;
     let janelaName = e.target.querySelector('#janelaNameModal');
     let janelaAltura = e.target.querySelector('#alturaModal');
     let janelaLargura = e.target.querySelector('#larguraModal');

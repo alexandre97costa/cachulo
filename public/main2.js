@@ -13,7 +13,7 @@ function addJanela2() {
     const propertiesRow = newElem(['row', 'row-cols-1', 'row-cols-md-3', 'gx-5', 'gy-3', 'properties-row', 'pb-3', 'pt-3']);
 
 
-    const propTitle = newElem(
+    let propTitle = newElem(
         ['h1', 'col-8', 'm-0'],
         'p',
         [
@@ -83,5 +83,5 @@ function addJanela2() {
     // after loading everything, show the titleModal
     const titleModal = new bootstrap.Modal(document.getElementById('titleModal'));
     //! un-comment this when the modal is ready
-    // titleModal.show(propTitle);
+    titleModal.show(propTitle);
 }
