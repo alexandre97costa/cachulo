@@ -21,7 +21,10 @@ select:disabled {
     border-color: white;
 }
 .input-group input:disabled:not(:first-child) {
-    border-left: 5px solid white;
+    border-left: 1px solid white;
+}
+.input-group input:disabled:first-child {
+    border-right: 5px solid white;
 }
 
 .bg-gray, .bg-grey {
