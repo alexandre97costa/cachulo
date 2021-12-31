@@ -22,7 +22,7 @@ titleModal.addEventListener('show.bs.modal', (e) => {
         newElem(['bi', 'bi-gear-fill', 'me-3'], 'i'),
         'Dados de \'' + titleText + '\''
     );
-    
+
     // this is for passing through the janela ID to the 'hide' event
     modalTitle.setAttribute('data-janela-id', titleElement.id);
     modalTitle.setAttribute('data-dimensions-id', propDimensions.id);
@@ -68,15 +68,19 @@ titleModal.addEventListener('hide.bs.modal', (e) => {
 });
 
 
-function newElem(classes = [], elementType = 'div', attributes = [], innerTextArg = '') {
-    var newElement = document.createElement(elementType);
+function newElem(classes = [],
+    tag = 'div',
+    attributes = [],
+    innerTxt = '') {
+
+    var newElement = document.createElement(tag);
     for (let i = 0; i < classes.length; i++) {
         newElement.classList.add(classes[i]);
     }
     for (let i = 0; i < attributes.length; i++) {
         newElement.setAttribute(attributes[i][0], attributes[i][1]);
     }
-    if (innerTextArg != '') { newElement.innerText = innerTextArg; }
+    if (innerTxt != '') { newElement.innerText = innerTxt; }
 
     return newElement;
 }
@@ -118,6 +122,7 @@ function newSubCategory(categoryType = '', titleId) {
             break;
         case 'vid':
             title.innerText = 'Vidros';
+
             break;
         case 'ace':
             title.innerText = 'Acessórios';
@@ -128,7 +133,8 @@ function newSubCategory(categoryType = '', titleId) {
 
     appendChildren(categoryContainer, [
         titleContainer,
-        addItemContainer
+        addItemContainer,
+        // newItem(categoryType, titleId)
     ])
 
     spacerCol.appendChild(categoryContainer);
@@ -144,8 +150,7 @@ function newItem(itemType = '', titleId, copyContent = false, contentArray = [])
     //? The function only uses content from contentArray if copyContent is set to true
 
 
-    let newItemContainer = newElem(['item-container', 'slim-shady', 'bg-white', 'rounded', 'py-2', 'mt-3']);
-    newItemContainer.addEventListener('onmouseout', (e) => { document.body.focus() });
+    const newItemContainer = newElem(['item-container', 'slim-shady', 'bg-white', 'rounded', 'py-2', 'mt-3']);
     let categoryName = '';
 
     switch (itemType) {
@@ -246,72 +251,95 @@ function newItem(itemType = '', titleId, copyContent = false, contentArray = [])
         case 'vid':
             categoryName = 'Vidros';
             countVids++;
-            // Comprimento
-            let vidMeasures = newElem(['text-muted', 'fw-bold', 'p-0', 'm-0']);
-            vidMeasures.innerText = 'Altura x Largura: ';
-            let vidMeasures_value = newElem(['value-child', 'text-warning'], 'span');
-            vidMeasures_value.innerText = '0 x 0 (0m²)';
-            vidMeasures.appendChild(vidMeasures_value);
-            let vidWidth_input = newElem(
-                ['input-minimized', 'form-control', 'text-muted', 'fs-5'],
+            // Composição
+            const vidComposicao = newElem(['text-muted', 'fw-bold', 'p-0', 'm-0']);
+            vidComposicao.innerText = 'Composição: ';
+            vidComposicao.appendChild(
+                newElem(['value-child', 'text-warning'], 'span', [[]], '...')
+            );
+            const vidComp_input = newElem(
+                ['input-minimized', 'form-control', 'text-muted', 'fs-5', 'mb-3'],
                 'input',
                 [
-                    ['type', 'number'],
-                    ['placeholder', '0']
+                    ['type', 'text'],
+                    ['placeholder', 'Escolhe uma composição...']
                 ]);
 
-            // Serie
-            let vidSerie = newElem(['text-muted', 'fw-bold', 'p-0', 'm-0']);
-            vidSerie.innerText = 'Série: ';
-            let vidSerie_value = newElem(['value-child', 'text-warning'], 'span');
-            vidSerie_value.innerText = '---';
-            vidSerie.appendChild(vidSerie_value);
+            // Medidas
+            // Buscar as medidas primeiro
+            let altura = document.getElementById(titleId).parentElement.querySelector('.prop-dimensions-altura').innerText;
+            let largura = document.getElementById(titleId).parentElement.querySelector('.prop-dimensions-largura').innerText;
 
-            // Referencia
-            let vidRef = newElem(['text-muted', 'fw-bold', 'p-0', 'm-0']);
-            vidRef.innerText = 'Ref: ';
+            const vidMeasures = newElem(['text-muted', 'fw-bold', 'p-0', 'm-0']);
+            vidMeasures.innerText = 'Altura x Largura: ';
+            vidMeasures.appendChild(
+                newElem(['value-child', 'text-muted', 'fw-normal'], 'span')
+            ).append(
+                altura + ' x ' + largura + ' = ',
+                newElem(['text-warning', 'fw-bold'], 'span', [[]], (altura * largura).toFixed(2) + 'm²')
+            );
+            const vidMeasuresRowOfInputs = newElem(['input-group']);
+            vidMeasuresRowOfInputs.append(
+                newElem(
+                    ['input-minimized', 'form-control', 'text-muted', 'fs-5', 'mb-2'],
+                    'input',
+                    [
+                        ['type', 'number'],
+                        ['value', altura],
+                        ['disabled', 'true']
+                    ]),
+                newElem(
+                    ['input-minimized', 'form-control', 'text-muted', 'fs-5', 'mb-2'],
+                    'input',
+                    [
+                        ['type', 'number'],
+                        ['value', largura],
+                        ['disabled', 'true']
+                    ])
+            )
 
-            appendChildren(newItemContainer,
-                [
-                    vidMeasures, vidWidth_input,
-                    vidSerie, newElem(['spacer']),
-                    vidRef, newElem(['spacer'])
-                ]);
+            const nota = newElem(['input-minimized', 'text-muted', 'mb-0'], 'span', [[]],
+                'Edita as dimensões clicando no titulo da janela.')
+
+
+
+
+            appendChildren(newItemContainer, [
+                vidComposicao, vidComp_input,
+                vidMeasures, vidMeasuresRowOfInputs,
+                nota
+            ]);
             break;
 
         case 'ace':
             categoryName = 'Acessórios';
             countAces++;
-            // Comprimento
-            let aceWidth = newElem(['text-muted', 'fw-bold', 'fs-6', 'p-0', 'm-0']);
-            aceWidth.innerText = 'Comprimento: ';
-            let aceWidth_value = newElem(['value-child', 'text-warning'], 'span');
-            aceWidth_value.innerText = '0.00m';
-            aceWidth.appendChild(aceWidth_value);
-            let aceWidth_input = newElem(
-                ['input-minimized', 'form-control', 'text-muted', 'fs-5'],
+            // Acessório basicamente
+            const acessorio = newElem(['text-muted', 'fw-bold', 'fs-6', 'p-0', 'm-0']);
+            acessorio.innerText = 'Acessório: ';
+            acessorio.appendChild(
+                newElem(['value-child', 'text-warning'], 'span', [[]], '...')
+            );
+            const acessorio_input = newElem(
+                ['input-minimized', 'form-control', 'text-muted', 'fs-5', 'mb-3'],
+                'input',
+                [
+                    ['type', 'text'],
+                    ['placeholder', 'Escolhe um acessório...']
+                ]);
+
+            const aceQuantidade_input = newElem(
+                ['input-minimized', 'form-control', 'text-muted', 'fs-5', 'mb-3'],
                 'input',
                 [
                     ['type', 'number'],
                     ['placeholder', '0']
                 ]);
 
-            // Serie
-            let aceSerie = newElem(['text-muted', 'fw-bold', 'p-0', 'm-0']);
-            aceSerie.innerText = 'Série: ';
-            let aceSerie_value = newElem(['value-child', 'text-warning'], 'span');
-            aceSerie_value.innerText = 'ABC-12';
-            aceSerie.appendChild(aceSerie_value);
-
-            // Referencia
-            let aceRef = newElem(['text-muted', 'fw-bold', 'p-0', 'm-0']);
-            aceRef.innerText = 'Ref: ';
 
             appendChildren(newItemContainer,
                 [
-                    aceWidth, aceWidth_input,
-                    aceSerie, newElem(['spacer']),
-                    aceRef, newElem(['spacer'])
+                    acessorio, acessorio_input, aceQuantidade_input
                 ]);
             break;
 

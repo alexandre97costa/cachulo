@@ -14,6 +14,15 @@
 .button-group:focus-within {
     box-shadow: 0 0 0px 2px rgba(255, 193, 7, 0.5) !important;
 }
+input:disabled,
+select:disabled {
+    background-color: var(--gray) !important;
+    opacity: 0.7 !important;
+    border-color: white;
+}
+.input-group input:disabled:not(:first-child) {
+    border-left: 5px solid white;
+}
 
 .bg-gray, .bg-grey {
     background-color: var(--gray);
@@ -122,11 +131,13 @@
     box-shadow: 0 0 0 0 transparent;
 }
 
-.item-container:not(:hover):not(:focus-within) button.input-minimized {
+.item-container:not(:hover):not(:focus-within) button.input-minimized,
+.item-container:not(:hover):not(:focus-within) span.input-minimized {
     display: none;
 }
 
-.item-container:hover button.input-minimized {
+.item-container:hover button.input-minimized,
+.item-container:hover span.input-minimized {
     display: inline-block;
 }
 

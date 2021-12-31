@@ -21,7 +21,8 @@ function addJanela2() {
             ['data-bs-toggle', 'modal'],
             ['data-bs-target', '#titleModal']
         ],
-        'Janela ' + countStructs);
+        'Janela ' + countStructs
+    );
     propTitle.appendChild(newElem(['bi', 'bi-pencil-square', 'ms-3', 'text-warning'], 'i'));
 
     const propBtnGroup = newElem(['col', 'btn-group', 'bg-white', 'px-3', 'm-0']);
@@ -69,19 +70,21 @@ function addJanela2() {
     itemsRow.addEventListener('show.bs.collapse', (e) => { e.target.parentElement.querySelector('.btn-collapse').innerText = 'Minimizar'; });
     itemsRow.addEventListener('hide.bs.collapse', (e) => { e.target.parentElement.querySelector('.btn-collapse').innerText = 'Maximizar'; });
 
-    const titleId = 'janela-title-' + countStructs;
-    const alu = newSubCategory('alu', titleId);
-    const vid = newSubCategory('vid', titleId);
-    const ace = newSubCategory('ace', titleId);
-
     // append everything to main
-    // appendChildren(propertiesRow, [propertiesNameContainer, propertiesButtonsGroup]);
-    appendChildren(itemsRow, [alu, vid, ace]);
     appendChildren(mainCol, [propertiesRow, itemsRow]);
     appendChildren(mainContainer, [mainCol]);
+
+    const titleId = 'janela-title-' + countStructs;
+    itemsRow.append(
+        newSubCategory('alu', titleId),
+        newSubCategory('vid', titleId),
+        newSubCategory('ace', titleId)
+    )
+
+
 
     // after loading everything, show the titleModal
     const titleModal = new bootstrap.Modal(document.getElementById('titleModal'));
     //! un-comment this when the modal is ready
-    titleModal.show(propTitle);
+    // titleModal.show(propTitle);
 }
