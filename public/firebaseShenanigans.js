@@ -22,40 +22,55 @@ var spinner = document.getElementById('spinner');
 window.onload = getMyShit()
     .then(console.table(cachulo))
     .then(addJanela2)
-    .then(spinner.parentNode.removeChild(spinner));
+    .then(spinner.parentNode.removeChild(spinner))
+    ;
 
 
 async function getMyShit() {
     console.log('%cRetrieving data...', 'color:limegreen;');
 
-    const getAlu_Series = await getDocs(query(collection(db, "aluminios")));
-
-    getAlu_Series.forEach(async (serie) => {
-
-        //* Code explanation
-        // getDocs() returns a promise resolved, in the form of a querySnapshot (https://firebase.google.com/docs/reference/js/firestore_#getdocs)
-        // querySnapshots have a 'docs' array, which can then be iterated with a forEach (https://firebase.google.com/docs/reference/node/firebase.firestore.QuerySnapshot#docs)
-        // the elements on this array have an id (element.id) which we want to copy into our database object (cachulo)
-        //! We DO NOT want to: 
-        // - Declare an array outside of a loop
-        // - Use push(), as it is a mutating function
-        //? We DO want to:
-        // - declare and directly assign 'cachulo.aluminios[serie.id]'
-        // - use an immutable function, like Array.map() or Array.from(), to copy the values
-
-        const getAlu_Refs = await getDocs(query(collection(db, "aluminios/" + serie.id + '/perfis')))
+    const getAlus = await getDocs(query(collection(db, "aluminios")))
         .then((response) => {
-            cachulo.aluminios[serie.id] = Array.from(response.docs, (element) => {return element.id});
+            cachulo.aluminios = Array.from(response.docs, (serieElement) => {
+                const serie = {
+                    id: serieElement.id
+                }
+                return serie;
+            });
         })
-        
+        .then(() => {
+            cachulo.aluminios.forEach((aluminioElement) => {
+                getDocs(query(collection(db, "aluminios/" + aluminioElement.id + '/perfis')))
+                .then((response2) => {
+                    Object.defineProperties(aluminioElement, {
+                        id: { value: aluminioElement.id },
+                        referencias: { value:  Array.from(response2.docs, (elementRef) => {
+                            const ref = {
+                                id: elementRef.id,
+                                preco: elementRef._document.data.value.mapValue.fields.preco.doubleValue
+                            }
+                            return ref;
+                        })}
+                    })
+                })
+            })
+            return cachulo.aluminios;
+        })
+        .then(console.log); // output cachulo.aluminios
 
-        //* This is our initial attempt, that used Imperative Programming
-        //* Let it rest in a comment block, as it is a sign of progress!
 
-        // cachulo.aluminios[serie.id] = [];
-        // getAlu_Refs.forEach((ref) => {
-        //         cachulo.aluminios[serie.id].push(ref.id);
-        //     })
-            
-        });
-}
+    const getVidros = await getDocs(query(collection(db, "vidros")))
+        .then((response) => {
+            cachulo.vidros = Array.from(response.docs, (element) => {
+                const vidro = {
+                    id: element.id,
+                    preco: element._document.data.value.mapValue.fields.preco.doubleValue
+                }
+                return vidro;
+            });
+            return cachulo.vidros;
+        })
+        .then(console.log); // output cachulo.vidros
+
+
+};
