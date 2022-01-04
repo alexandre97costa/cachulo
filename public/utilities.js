@@ -158,12 +158,12 @@ function newItem(itemType = '', titleId, copyContent = false, contentArray = [])
             categoryName = 'Alumínios';
             countAlus++;
             //* Comprimento
-            let aluWidth = newElem(['text-muted', 'fw-bold', 'p-0', 'm-0']);
+            const aluWidth = newElem(['text-muted', 'fw-bold', 'p-0', 'm-0']);
             aluWidth.innerText = 'Medida: ';
-            let aluWidth_value = newElem(['value-child', 'text-warning'], 'span');
+            const aluWidth_value = newElem(['value-child', 'text-warning'], 'span');
             aluWidth_value.innerText = (copyContent) ? contentArray[0].toFixed(2) + 'm' : '0.00m';
             aluWidth.appendChild(aluWidth_value);
-            let aluWidth_input = newElem(
+            const aluWidth_input = newElem(
                 ['input-minimized', 'form-control', 'text-muted', 'fs-5', 'mb-3'],
                 'input',
                 [
@@ -173,20 +173,20 @@ function newItem(itemType = '', titleId, copyContent = false, contentArray = [])
             aluWidth_input.addEventListener('input', (e) => { updateValue(e, aluWidth_value, 'number') });
 
             //* Serie
-            let aluSerie = newElem(['text-muted', 'fw-bold', 'p-0', 'm-0']);
+            const aluSerie = newElem(['text-muted', 'fw-bold', 'p-0', 'm-0']);
             aluSerie.innerText = 'Série: ';
-            let aluSerie_value = newElem(['value-child', 'text-warning'], 'span');
+            const aluSerie_value = newElem(['value-child', 'text-warning'], 'span');
             aluSerie_value.innerText = (copyContent) ? contentArray[1] : '...';
             aluSerie.appendChild(aluSerie_value);
-            let aluSerie_input = newElem(
+            const aluSerie_input = newElem(
                 ['input-minimized', 'form-control', 'text-muted', 'fs-5', 'mb-3'],
                 'input',
                 [
+                    ['type', 'text'],
                     ['placeholder', 'Escolhe uma série...'],
                     ['list', 'datalistSerie' + countAlus]
                 ]);
-            let aluSerie_dataList = newElem([], 'datalist', [['id', 'datalistSerie' + countAlus]]);
-            aluSerie_input.addEventListener('change', (e) => { updateValue(e, aluSerie_value, 'text') });
+            const aluSerie_dataList = newElem([], 'datalist', [['id', 'datalistSerie' + countAlus]]);
             aluSerie_input.addEventListener('focus', (e) => {
                 aluSerie_input.value = '';
                 updateValue('...', aluSerie_value, 'other');
@@ -196,40 +196,43 @@ function newItem(itemType = '', titleId, copyContent = false, contentArray = [])
                 aluRef_select.appendChild(newElem([], 'option', [['selected', 'true']], '(vazio)'));
             });
 
-            var obj = cachulo.aluminios;
-            for (var key in obj) {
-                if (obj.hasOwnProperty(key)) {
-                    aluSerie_dataList.appendChild(newElem([], 'option', [['value', key]]));
-                }
-            }
+            // feeding the options from the cachulo object
+            cachulo.aluminios.forEach((aluminio) => {
+                aluSerie_dataList.appendChild(newElem([], 'option', [['value', aluminio.id]]));
+            });
+
 
             //* Referencia
-            let aluRef = newElem(['text-muted', 'fw-bold', 'p-0', 'm-0']);
+            const aluRef = newElem(['text-muted', 'fw-bold', 'p-0', 'm-0']);
             aluRef.innerText = 'Ref: ';
-            let aluRef_value = newElem(['value-child', 'text-warning'], 'span');
+            const aluRef_value = newElem(['value-child', 'text-warning'], 'span');
             aluRef_value.innerText = (copyContent) ? contentArray[2] : '...';
             aluRef.appendChild(aluRef_value);
-            let aluRef_select = newElem(['input-minimized', 'form-select', 'text-muted', 'fs-5', 'mb-3'], 'select', [['disabled', 'true']]);
+            const aluRef_select = newElem(['input-minimized', 'form-select', 'text-muted', 'fs-5', 'mb-3'], 'select', [['disabled', 'true']]);
             aluRef_select.appendChild(newElem([], 'option', [['selected', 'true']], '(vazio)'));
-            aluRef_select.addEventListener('input', (e) => { updateValue(e, aluRef_value, 'text') });
+            aluRef_select.addEventListener('change', (e) => {
+                updateValue(e, aluRef_value, 'text');
+                aluRef_select.setAttribute('title', e.target.value);
+            });
 
             // For syncing the values of both selects (serie + ref)
             aluSerie_input.addEventListener('input', (e) => {
+                updateValue(e, aluSerie_value, 'text');
                 aluSerie_input.classList.remove('is-invalid');
+                aluSerie_input.setAttribute('title', e.target.value);
                 aluRef_select.innerHTML = '';
 
-                // will try to get refs from the input value
-                try {
-                    // Feed the datalist with the values
-                    var refArray = cachulo.aluminios[e.target.value];
-                    refArray.forEach(ref => {
-                        aluRef_select.appendChild(newElem([], 'option', [['value', ref]], ref));
-                    });
-                    // Add default option to ref
+                let validIndex = cachulo.aluminios.findIndex((aluminio) => { return (aluminio.id === e.target.value) });
+
+                if (validIndex != -1) {
                     aluRef_select.removeAttribute('disabled');
-                    aluRef_select.insertBefore(newElem([], 'option', [['selected', 'true'], ['disabled', 'true']], 'Escolhe uma ref...'), aluRef_select.children[0]);
-                } catch (error) {
-                    if (aluSerie_input != '') { aluSerie_input.classList.add('is-invalid'); }
+                    aluRef_select.appendChild(newElem([], 'option', [['selected', 'true'], ['disabled', 'true']], 'Escolhe uma ref...'));
+                    cachulo.aluminios[validIndex].referencias.forEach((ref) => {
+                        aluRef_select.appendChild(newElem([], 'option', [['value', ref.id]], ref.id));
+                    })
+                } else {
+                    updateValue(e, aluSerie_value, 'text', true);
+                    if (aluSerie_input.value != '') { aluSerie_input.classList.add('is-invalid'); }
                     // if the values are not right then it will disable the ref_select and add the (vazio) again
                     aluRef_select.setAttribute('disabled', 'true');
                     aluRef_select.appendChild(newElem([], 'option', [['selected', 'true']], '(vazio)'));
@@ -257,13 +260,32 @@ function newItem(itemType = '', titleId, copyContent = false, contentArray = [])
             vidComposicao.appendChild(
                 newElem(['value-child', 'text-warning'], 'span', [[]], '...')
             );
+
             const vidComp_input = newElem(
                 ['input-minimized', 'form-control', 'text-muted', 'fs-5', 'mb-3'],
                 'input',
                 [
                     ['type', 'text'],
-                    ['placeholder', 'Escolhe uma composição...']
+                    ['placeholder', 'Escolhe uma composição...'],
+                    ['list', 'datalistVid' + countVids]
                 ]);
+            const vidComp_dataList = newElem([], 'datalist', [['id', 'datalistVid' + countVids]]);
+
+            cachulo.vidros.forEach((vidro) => {
+                console.log(vidro);
+                vidComp_dataList.appendChild(newElem([], 'option', [['value', vidro.id]]));
+            })
+
+            vidComp_input.addEventListener('input', (e) => {
+                updateValue(e, vidComposicao.children[0], 'text')
+                vidComp_input.classList.remove('is-invalid');
+                vidComp_input.setAttribute('title', e.target.value);
+
+                if (cachulo.vidros.findIndex((vidro) => { return (vidro.id === e.target.value) }) == -1) {
+                    vidComp_input.classList.add('is-invalid');
+                    updateValue(e, vidComposicao.children[0], 'text', true);
+                }
+            })
 
             // Medidas
             // Buscar as medidas primeiro
@@ -299,16 +321,20 @@ function newItem(itemType = '', titleId, copyContent = false, contentArray = [])
             )
 
             const nota = newElem(['input-minimized', 'text-muted', 'mb-0'], 'span', [[]],
-                'Edita as dimensões clicando no titulo da janela.')
+                'Edita as dimensões clicando no titulo da janela.');
+
+
+                    
 
 
 
 
             appendChildren(newItemContainer, [
-                vidComposicao, vidComp_input,
+                vidComposicao, vidComp_input, vidComp_dataList,
                 vidMeasures, vidMeasuresRowOfInputs,
                 nota
             ]);
+            console.log(newItemContainer);
             break;
 
         case 'ace':
@@ -411,7 +437,14 @@ function newItem(itemType = '', titleId, copyContent = false, contentArray = [])
     return newItemContainer;
 }
 
-function updateValue(event, spanElement, inputType = '') {
+function updateValue(event, spanElement, inputType = '', isError = false) {
+    if (isError) {
+        spanElement.classList.remove('text-warning');
+        spanElement.classList.add('text-danger');
+    } else {
+        spanElement.classList.remove('text-danger');
+        spanElement.classList.add('text-warning');
+    }
     switch (inputType) {
         case 'number':
             //? This will do a series of things to sanitize input:
