@@ -86,5 +86,5 @@ function addJanela2() {
     // after loading everything, show the titleModal
     const titleModal = new bootstrap.Modal(document.getElementById('titleModal'));
     //! un-comment this when the modal is ready
-    // titleModal.show(propTitle);
+    titleModal.show(propTitle);
 }
