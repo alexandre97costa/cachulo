@@ -441,6 +441,8 @@ function updateValue(event, spanElement, inputType = '', isError = false) {
     if (isError) {
         spanElement.classList.remove('text-warning');
         spanElement.classList.add('text-danger');
+        spanElement.parentElement.parentElement.classList.add('wrong');
+        console.log(spanElement.parentElement.parentElement);
     } else {
         spanElement.classList.remove('text-danger');
         spanElement.classList.add('text-warning');
