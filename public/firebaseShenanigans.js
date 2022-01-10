@@ -20,7 +20,6 @@ const db = getFirestore();
 
 var spinner = document.getElementById('spinner');
 window.onload = getMyShit()
-    .then(console.table(cachulo))
     .then(addJanela2)
     .then(spinner.parentNode.removeChild(spinner))
     ;
@@ -29,35 +28,31 @@ window.onload = getMyShit()
 async function getMyShit() {
     console.log('%cRetrieving data...', 'color:limegreen;');
 
-    const getAlus = await getDocs(query(collection(db, "aluminios")))
-        .then((response) => {
-            cachulo.aluminios = Array.from(response.docs, (serieElement) => {
-                const serie = {
-                    id: serieElement.id
-                }
-                return serie;
-            });
-        })
-        .then(() => {
-            cachulo.aluminios.forEach((aluminioElement) => {
-                getDocs(query(collection(db, "aluminios/" + aluminioElement.id + '/perfis')))
-                .then((response2) => {
-                    Object.defineProperties(aluminioElement, {
-                        id: { value: aluminioElement.id },
-                        referencias: { value:  Array.from(response2.docs, (elementRef) => {
-                            const ref = {
-                                id: elementRef.id,
-                                preco: elementRef._document.data.value.mapValue.fields.preco.doubleValue
-                            }
-                            return ref;
-                        })}
-                    })
-                })
-            })
-            return cachulo.aluminios;
-        })
-        .then(console.log); // output cachulo.aluminios
+    const getAlus2 = await getDocs(query(collection(db, "aluminios")));
+    if (getAlus2.empty) throw Error('[BRUH] Error in requesting aluminios');
 
+    const myAluDocs = Array.from(await getAlus2.docs, doc => { return doc.id; });
+
+    myAluDocs.forEach(async doc => {
+        const getThisDocRefs = await getDocs(query(collection(db, "aluminios/" + doc + "/perfis")))
+        if (getThisDocRefs.empty) throw Error('[BRUH] Error in requesting refs');
+
+        const aluminioObject = {
+            id: doc,
+            referencias: Array.from(await getThisDocRefs.docs, (referencia) => {
+                const ref = {
+                    id: referencia.id,
+                    preco: referencia._document.data.value.mapValue.fields.preco.doubleValue
+                }
+                return ref;
+            })
+        }
+        cachulo.aluminios.push(aluminioObject); // unfortunate push() but oh well
+
+        if (cachulo.aluminios.length == myAluDocs.length) {
+            console.table(cachulo.aluminios);
+        }
+    })
 
     const getVidros = await getDocs(query(collection(db, "vidros")))
         .then((response) => {
@@ -70,7 +65,7 @@ async function getMyShit() {
             });
             return cachulo.vidros;
         })
-        .then(console.log); // output cachulo.vidros
+        .then(console.table); // output cachulo.vidros
 
 
 };

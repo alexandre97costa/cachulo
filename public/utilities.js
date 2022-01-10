@@ -272,7 +272,6 @@ function newItem(itemType = '', titleId, copyContent = false, contentArray = [])
             const vidComp_dataList = newElem([], 'datalist', [['id', 'datalistVid' + countVids]]);
 
             cachulo.vidros.forEach((vidro) => {
-                console.log(vidro);
                 vidComp_dataList.appendChild(newElem([], 'option', [['value', vidro.id]]));
             })
 
@@ -442,10 +441,10 @@ function updateValue(event, spanElement, inputType = '', isError = false) {
         spanElement.classList.remove('text-warning');
         spanElement.classList.add('text-danger');
         spanElement.parentElement.parentElement.classList.add('wrong');
-        console.log(spanElement.parentElement.parentElement);
     } else {
         spanElement.classList.remove('text-danger');
         spanElement.classList.add('text-warning');
+        spanElement.parentElement.parentElement.classList.remove('wrong');
     }
     switch (inputType) {
         case 'number':

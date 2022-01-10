@@ -211,9 +211,9 @@ select:disabled {
  }
 @keyframes wrong {
     from {
-        box-shadow: inset 0px 0px red, inset 0px 0px red;
+        box-shadow: inset 0px 0px salmon, inset 0px 0px salmon;
     }
     to {
-        box-shadow: inset 2px 2px red, inset -2px -2px red;
+        box-shadow: inset 2px 2px salmon, inset -2px -2px salmon;
     }
 }
