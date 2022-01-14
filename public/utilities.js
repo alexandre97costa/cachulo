@@ -170,7 +170,15 @@ function newItem(itemType = '', titleId, copyContent = false, contentArray = [])
                     ['type', 'number'],
                     ['placeholder', (copyContent) ? contentArray[0] : '0']
                 ]);
-            aluWidth_input.addEventListener('input', (e) => { updateValue(e, aluWidth_value, 'number') });
+            aluWidth_input.addEventListener('input', (e) => {
+                updateValue(e, aluWidth_value, 'number');
+                calculatePrice({
+                    itemType: 'alu', 
+                    valueType: 'multiplier',
+                    inputValue: e.target.value,
+                    parent: newItemContainer
+                })
+            });
 
             //* Serie
             const aluSerie = newElem(['text-muted', 'fw-bold', 'p-0', 'm-0']);
@@ -210,9 +218,16 @@ function newItem(itemType = '', titleId, copyContent = false, contentArray = [])
             aluRef.appendChild(aluRef_value);
             const aluRef_select = newElem(['input-minimized', 'form-select', 'text-muted', 'fs-5', 'mb-3'], 'select', [['disabled', 'true']]);
             aluRef_select.appendChild(newElem([], 'option', [['selected', 'true']], '(vazio)'));
-            aluRef_select.addEventListener('change', (e) => {
+            aluRef_select.addEventListener('input', (e) => {
                 updateValue(e, aluRef_value, 'text');
                 aluRef_select.setAttribute('title', e.target.value);
+
+                calculatePrice({
+                    itemType: 'alu',
+                    valueType: 'preco',
+                    inputValue: e.target.value,
+                    parent: newItemContainer
+                });
             });
 
             // For syncing the values of both selects (serie + ref)
@@ -284,6 +299,13 @@ function newItem(itemType = '', titleId, copyContent = false, contentArray = [])
                     vidComp_input.classList.add('is-invalid');
                     updateValue(e, vidComposicao.children[0], 'text', true);
                 }
+
+                calculatePrice({
+                    itemType: 'vid',
+                    valueType: 'preco',
+                    inputValue: e.target.value,
+                    parent: newItemContainer
+                })
             })
 
             // Medidas
@@ -302,7 +324,7 @@ function newItem(itemType = '', titleId, copyContent = false, contentArray = [])
             const vidMeasuresRowOfInputs = newElem(['input-group']);
             vidMeasuresRowOfInputs.append(
                 newElem(
-                    ['input-minimized', 'form-control', 'text-muted', 'fs-5', 'mb-2'],
+                    ['input-minimized', 'input-vidro-medidas', 'form-control', 'text-muted', 'fs-5', 'mb-2'],
                     'input',
                     [
                         ['type', 'number'],
@@ -310,7 +332,7 @@ function newItem(itemType = '', titleId, copyContent = false, contentArray = [])
                         ['disabled', 'true']
                     ]),
                 newElem(
-                    ['input-minimized', 'form-control', 'text-muted', 'fs-5', 'mb-2'],
+                    ['input-minimized', 'input-vidro-medidas', 'form-control', 'text-muted', 'fs-5', 'mb-2'],
                     'input',
                     [
                         ['type', 'number'],
@@ -323,7 +345,7 @@ function newItem(itemType = '', titleId, copyContent = false, contentArray = [])
                 'Edita as dimensões clicando no titulo da janela.');
 
 
-                    
+
 
 
 
@@ -333,7 +355,6 @@ function newItem(itemType = '', titleId, copyContent = false, contentArray = [])
                 vidMeasures, vidMeasuresRowOfInputs,
                 nota
             ]);
-            console.log(newItemContainer);
             break;
 
         case 'ace':
@@ -373,10 +394,23 @@ function newItem(itemType = '', titleId, copyContent = false, contentArray = [])
     }
 
 
-    // botoes de cada item
-    let buttonsContainer = newElem(['a', 'input-minimized', 'mt-4', 'mb-2']);
+    // footer de cada item
+    // inclui o preço do item, duplicar e eliminar
+
+    const buttonsContainer = newElem(['input-minimized', 'mt-4', 'mb-2']);
+    const footerPreco = newElem(
+        ['footer-preco', 'pe-none', 'input-minimized', 'col-8', 'bg-warning', 'fw-bold', 'fs-6', 'text-center', 'rounded', 'py-1', 'btn'],
+        'span',
+        [
+            ['data-multiplier', '0']
+            ['data-preco', '0']
+            ['data-resultado', '0']
+        ])
+    footerPreco.innerText = '0.00€';
+
+    // legacy, dont delete in case you need it in the future
     let btnMaximizar = newElem(
-        ['input-minimized', 'col-8', 'btn', 'btn-warning', 'btn-bloc', 'text-50-gray', 'fw-bold', 'fs-6', 'py-1'],
+        ['input-minimized', 'col-8', 'btn', 'btn-warning', 'text-50-gray', 'fw-bold', 'fs-6', 'py-1'],
         'button',
         [
             ['type', 'button'],
@@ -430,7 +464,7 @@ function newItem(itemType = '', titleId, copyContent = false, contentArray = [])
     })
 
     appendChildren(btnGroup, [btnDuplicate, btnDelete]);
-    appendChildren(buttonsContainer, [btnMaximizar, btnGroup]);
+    appendChildren(buttonsContainer, [footerPreco, btnGroup]);
     newItemContainer.appendChild(buttonsContainer);
 
     return newItemContainer;
@@ -448,11 +482,7 @@ function updateValue(event, spanElement, inputType = '', isError = false) {
     }
     switch (inputType) {
         case 'number':
-            //? This will do a series of things to sanitize input:
-            //?   - Erase 'e', '+' and '-' (they are accepted by the input)
-            //?   - Convert that string into a float
-            //?   - Round the float to 2 decimal places 
-            spanElement.innerText = parseFloat(event.target.value.replace(/[e\+\-]/gi, '')).toFixed(2) + 'm';
+            spanElement.innerText = sanitizeNumber(event.target.value) + 'm';
             break;
         case 'text':
             spanElement.innerText = event.target.value.toLowerCase();
@@ -479,4 +509,92 @@ function saveJanelaName(event, titleElement, count) {
     inputElement.classList.add('name-input-hidden');
     titleElement.style.display = 'block';
     titleElement.appendChild(newElem(['bi', 'bi-pencil-square', 'ms-3', 'text-warning'], 'i'));
+}
+
+function sanitizeNumber(numberToSanitize) {
+    //? This will do a series of things to sanitize input:
+    //?   - Erase 'e', '+' and '-' (they are accepted by the input)
+    //?   - Convert that string into a float
+    //?   - Round the float to 2 decimal places 
+    return parseFloat(numberToSanitize.replace(/[e\+\-]/gi, '')).toFixed(2)
+}
+
+function calculatePrice(options = {
+    itemType: '',       // 'alu' | 'vid' | 'ace'
+    valueType: '',      // 'multiplier' | 'preco'
+    inputValue: '',        // nome da referência, composição, etc (só usado se value=preco)
+    parent: ''          // para conseguir chegar até ao .footer-preco 
+}) {
+    if (options.itemType == '' &&
+        options.itemType != 'alu' &&
+        options.itemType != 'vid' &&
+        options.itemType != 'ace') {
+        throw Error('itemType is not declared, or is wrongly typed (itemType: \'' + options.itemType + '\')');
+    }
+    if (options.parent == '') throw Error('Bruh, you need to indicate a parent element.')
+
+    let footerPreco = options.parent.querySelector('.footer-preco');
+
+
+    switch (options.valueType) {
+        case 'multiplier':
+            // provavlemnete preciso de mais um argumento para o valor do multiplier
+            footerPreco.setAttribute('data-multiplier', options.inputValue);
+            break;
+        case 'preco':
+            footerPreco.setAttribute('data-preco', fetchPrice(options.itemType, options.inputValue));
+            break;
+        default:
+            break;
+    }
+
+    // get the multiplier (area do vidro)
+    if (options.itemType == 'vid') {
+        let area = 1;
+        let inputs = options.parent.querySelectorAll('.input-vidro-medidas');
+        inputs.forEach((input) => { area = area * input.value; })
+        footerPreco.setAttribute('data-multiplier', area);
+    }
+    updateItemsPrice(footerPreco);
+    console.log(footerPreco);
+
+    
+
+
+}
+
+
+
+function fetchPrice(itemType, priceId) {
+    let preco = 0;
+    switch (itemType) {
+        case 'alu':
+            cachulo.aluminios.forEach((aluminio) => {
+                aluminio.referencias.forEach((referencia) => {
+                    if (referencia.id == priceId) preco = referencia.preco
+                })
+            })
+            return preco;
+            break;
+        case 'vid':
+            cachulo.vidros.forEach((vidro) => {
+                if (vidro.id == priceId) preco = vidro.preco 
+            })
+            return preco
+            break;
+
+        //! Falta fazer os acessorios, mas a estrutura 
+        //! cachulo.acessorios ainda nem está feita sequer
+
+        default:
+            break;
+    }
+}
+
+function updateItemsPrice(footerPreco) {
+    let multiplier = footerPreco.getAttribute('data-multiplier');
+    let preco = footerPreco.getAttribute('data-preco');
+    let resultado = multiplier * preco;
+    footerPreco.setAttribute('data-resultado', resultado.toFixed(2));
+    footerPreco.innerText = footerPreco.getAttribute('data-resultado') + '€'
 }

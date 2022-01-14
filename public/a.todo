@@ -1,0 +1,8 @@
+
+- Mudar o updatePreco para apenas precisar de parent,
+input.value, e palavra chave (multiplier | preco)
+
+- adicionar func para calcular o resultado (mult * preco)
+
+------
+
