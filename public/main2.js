@@ -1,10 +1,12 @@
 function addJanela2() {
+    console.log(document.querySelector('.documento-preco').innerText)
+
     const mainContainer = document.getElementById('main-container');
     countStructs++;
 
     // main container
     const mainCol = newElem(
-        ['col', 'main-col', 'border', 'border-warning', 'border-w-3', 'border-start-0', 'border-end-0', 'border-top-0', 'px-5', 'pt-3'],
+        ['col', 'main-col', 'border', 'border-warning', 'border-w-3', 'border-start-0', 'border-end-0', 'border-top-0', 'px-5', 'pt-4'],
         'div',
         [['id', 'struct-' + countStructs]]
     );
@@ -14,7 +16,7 @@ function addJanela2() {
 
 
     let propTitle = newElem(
-        ['h1', 'col-8', 'm-0'],
+        ['h2', 'col-8', 'm-0', 'order-first'],
         'p',
         [
             ['id', 'janela-title-' + countStructs],
@@ -25,7 +27,7 @@ function addJanela2() {
     );
     propTitle.appendChild(newElem(['bi', 'bi-pencil-square', 'ms-3', 'text-warning'], 'i'));
 
-    const propBtnGroup = newElem(['col', 'btn-group', 'bg-white', 'px-3', 'm-0']);
+    const propBtnGroup = newElem(['col', 'btn-group', 'bg-white', 'px-3', 'm-0', 'order-last', 'order-md-2']);
     const propBtnCollapse = newElem(
         ['btn', 'btn-outline-secondary', 'btn-collapse', 'fw-bold'],
         'button',
@@ -51,16 +53,23 @@ function addJanela2() {
     })
 
     const propDimensions = newElem(
-        ['col-12', 'fw-bol', 'fs-5', 'text-muted', 'm-0', 'prop-dimensions'],
+        ['col-12', 'fw-bol', 'fs-5', 'text-muted', 'm-0', 'mt-2', 'prop-dimensions', 'order-md-last'],
         'p',
         [
             ['id', 'janela-dimensions-' + countStructs]
         ]);
     propDimensions.append(
+        'Altura: ',
         newElem(['prop-dimensions-altura'], 'span', [['data-altura', '0']], '0'),
-        ' x ',
+        ' m',
+        newElem(['janela-spacer', 'mx-3'], 'span'),
+        'Largura: ',
         newElem(['prop-dimensions-largura'], 'span', [['data-largura', '0']], '0'),
-        ' m'
+        ' m',
+        newElem(['janela-spacer', 'mx-3'], 'span'),
+        'Preço: ',
+        newElem(['janela-preco'], 'span', [['data-janela-preco', '0']], '0'),
+        ' €'
     )
     appendChildren(propBtnGroup, [propBtnCollapse, propBtnDelete]);
     appendChildren(propertiesRow, [propTitle, propBtnGroup, propDimensions]);
