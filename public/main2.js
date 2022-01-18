@@ -53,7 +53,7 @@ function addJanela2() {
     })
 
     const propDimensions = newElem(
-        ['col-12', 'fw-bol', 'fs-5', 'text-muted', 'm-0', 'mt-2', 'prop-dimensions', 'order-md-last'],
+        ['col-12', 'fw-bol', 'fs-5', 'text-muted', 'm-0', 'my-1', 'prop-dimensions', 'order-md-last'],
         'p',
         [
             ['id', 'janela-dimensions-' + countStructs]
