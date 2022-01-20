@@ -178,6 +178,7 @@ function newItem(itemType = '', titleId, copyContent = false, contentArray = [])
                     inputValue: e.target.value,
                     parent: newItemContainer
                 })
+                updateJanelaPrice();
             });
 
             //* Serie
@@ -228,6 +229,7 @@ function newItem(itemType = '', titleId, copyContent = false, contentArray = [])
                     inputValue: e.target.value,
                     parent: newItemContainer
                 });
+                updateJanelaPrice();
             });
 
             // For syncing the values of both selects (serie + ref)
@@ -305,7 +307,8 @@ function newItem(itemType = '', titleId, copyContent = false, contentArray = [])
                     valueType: 'preco',
                     inputValue: e.target.value,
                     parent: newItemContainer
-                })
+                });
+                updateJanelaPrice();
             })
 
             // Medidas
@@ -556,11 +559,6 @@ function calculatePrice(options = {
         footerPreco.setAttribute('data-multiplier', area);
     }
     updateItemsPrice(footerPreco);
-    console.log(footerPreco);
-
-    
-
-
 }
 
 
@@ -597,4 +595,33 @@ function updateItemsPrice(footerPreco) {
     let resultado = multiplier * preco;
     footerPreco.setAttribute('data-resultado', resultado.toFixed(2));
     footerPreco.innerText = footerPreco.getAttribute('data-resultado') + '€'
+}
+
+function updateJanelaPrice() {
+    let janelas = document.querySelectorAll('.main-col');
+
+    janelas.forEach((janela) => {
+        let precoItems = janela.querySelectorAll('.footer-preco');
+        let floatPrecoItems = Array.from(precoItems, (item) => {
+            return parseFloat(item.innerText.replace('€', ''));
+        })
+        let sumPrecoItems = floatPrecoItems.reduce((previousValue, currentValue) => {
+            return previousValue + currentValue;
+        }).toFixed(2);
+
+        let precoJanela = janela.querySelector('.janela-preco');
+        precoJanela.innerText = sumPrecoItems;
+    });
+
+    let precosJanelas = Array.from(document.querySelectorAll('.janela-preco'), (preco) => {
+        return parseFloat(preco.innerText);
+    })
+    let precoTotalDocumento = precosJanelas.reduce((previousValue, currentValue) => {
+        return previousValue + currentValue;
+    }).toFixed(2);
+    
+    let precoDocumentoElement = document.querySelector('.documento-preco');
+    precoDocumentoElement.setAttribute('data-documento-preco', precoTotalDocumento);
+    precoDocumentoElement.innerText = precoTotalDocumento + '€';
+
 }

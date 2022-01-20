@@ -68,7 +68,7 @@ function addJanela2() {
         ' m',
         newElem(['janela-spacer', 'mx-3'], 'span'),
         'Preço: ',
-        newElem(['janela-preco'], 'span', [['data-janela-preco', '0']], '0'),
+        newElem(['janela-preco'], 'span', [['data-janela-preco', '0']], '0.00'),
         ' €'
     )
     appendChildren(propBtnGroup, [propBtnCollapse, propBtnDelete]);
@@ -95,5 +95,5 @@ function addJanela2() {
     // after loading everything, show the titleModal
     const titleModal = new bootstrap.Modal(document.getElementById('titleModal'));
     //! un-comment this when the modal is ready
-    // titleModal.show(propTitle);
+    titleModal.show(propTitle);
 }
